@@ -1,7 +1,9 @@
 {
-  "name": "TiendaMusica",
-  "Description": "Tienda de Musica",
+  "name": "sdi-actividad2-403-409",
+  "Description": "Entrega 2 de SDI",
   "version": "1.0.0",
+  "license": "UNLICENSED",
+  "repository": "https://github.com/emiliocortina/sdi-actividad2-403-409",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
@@ -10,6 +12,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^2.2.33",
     "request": "^2.88.0",
-    "swig": "^1.4.2"
+    "swig-templates": "^2.0.3"
   }
 }
