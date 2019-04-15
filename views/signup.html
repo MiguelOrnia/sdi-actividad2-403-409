@@ -1,0 +1,40 @@
+{% extends "bs4.html" %}
+{% block cuerpo %}
+<div class="wrapper">
+		<div id="formContent">
+		
+			<!-- Tabs Titles -->
+			<h2>Registrate como usuario</h2>
+
+			<!-- Login Form -->
+			<form method="post" action="/signup">
+				<label class="control-label" for="email">Correo electrónico</label>
+				<input type="text" name="email"
+						placeholder="user@email.com" required="true" /> 
+
+				
+				<label class="control-label" for="name">Nombre</label>
+				<input type="text" name="name"
+						placeholder="Juan" required="true" />
+				
+				<label class="control-label" for="surname">Apellidos</label>
+				<input type="text" name="surname"
+						placeholder="Peréz Almonte" required="true" />
+				
+				<label class="control-label" for="password">Contraseña</label>
+				<input type="password" name="password"
+						placeholder="Entre el Password" />
+				
+				<label class="control-label" for="repassword">Recontraseña</label>
+				<input type="password" name="repassword"
+						placeholder="Repita el Password" />
+						
+				<input id="enviar" type="submit" value="Enviar">
+			</form>
+			<!-- Remind Passowrd -->
+			<div id="formFooter">
+				<a class="underlineHover" href="/identificarse">Iniciar sesión</a>
+			</div>
+		</div>
+</div>
+{% endblock %}

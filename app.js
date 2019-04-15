@@ -17,9 +17,6 @@ app.use(function(req, res, next) {
 var jwt = require('jsonwebtoken');
 app.set('jwt', jwt);
 
-var fs = require('fs');
-var https = require('https');
-
 
 var expressSession = require('express-session');
 app.use(expressSession({
@@ -33,11 +30,10 @@ var crypto = require('crypto');
 var fileUpload = require('express-fileupload');
 app.use(fileUpload());
 
-var swig = require('swig');
+var swig = require('swig-templates');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
 
 
 // routerUsuarioSession

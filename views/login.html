@@ -1,0 +1,27 @@
+{% extends "bs4.html" %}
+{% block cuerpo %}
+<div class="wrapper">
+		<div id="formContent">
+			<!-- Tabs Titles -->
+
+			<!-- Icon -->
+			<div>
+				<img src="/img/myWallapop.svg" id="icon" alt="User Icon" />
+			</div>
+
+			<!-- Login Form -->
+			<form method="post" action="/login">
+				<input type="text" id="login"  name="username" placeholder="Email" required="true"> 
+				
+				<input type="password" id="password" name="password" placeholder="Password" required="true">
+					
+				<input id="enviar" type="submit" value="Enviar">
+			</form>
+
+			<!-- Remind Passowrd -->
+			<div id="formFooter">
+				<a class="underlineHover" href="/registrarse">Registrarse</a>
+			</div>
+		</div>
+</div>
+{% endblock %}

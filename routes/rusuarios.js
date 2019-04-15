@@ -4,7 +4,7 @@ module.exports = function(app, swig, gestorBD) {
     });
 
     app.get("/registrarse", function(req, res) {
-        var respuesta = swig.renderFile('views/bregistro.html', {});
+        var respuesta = swig.renderFile('views/signup.html', {});
         res.send(respuesta);
     });
 
@@ -36,7 +36,7 @@ module.exports = function(app, swig, gestorBD) {
     });
 
     app.get("/identificarse", function(req, res) {
-        var respuesta = swig.renderFile('views/bidentificacion.html', {});
+        var respuesta = swig.renderFile('views/login.html', {});
         res.send(respuesta);
     });
 
