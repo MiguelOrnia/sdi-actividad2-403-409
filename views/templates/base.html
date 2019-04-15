@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+
+    </script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+
+    </script>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/custom.css"/>
+    <script src="/script/languages.js">
+
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#myNavbar">
+                <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a href="/"><img src="/img/myWallapop-small.svg" alt="logo"/></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+                <li id="home"><a href="/">Home</a></li>
+                <li id="users-menu" class="dropdown"
+                    sec:authorize="hasRole('ROLE_ADMIN')"><a
+                        class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span th:text="#{nav.manage.users}" th:remove="tag">Gestionar usuarios</span>
+                    <span class="caret"></span>
+                </a>
+                    <ul class="dropdown-menu">
+                        <li id="usuarios"><a href="/user/list">Ver Usuarios</a></li>
+                    </ul>
+                </li>
+
+                <li id="users-menu" class="dropdown"
+                    sec:authorize="hasRole('ROLE_STAND')"><a
+                        class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar usuarios</span>
+                    <span class="caret"></span>
+                </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/sales/add">Agregar oferta</a></li>
+                        <li><a href="/sales/list">Listar ofertas</a></li>
+                        <li><a href="/sales/search">Buscar ofertas</a></li>
+                        <li><a href="/sales/purchased">Lista de ofertas
+                            compradas</a></li>
+                    </ul>
+                </li>
+                <li><a href="/messages">Mensajes</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li sec:authorize="!isAuthenticated()"><a href="/signup"
+                                                          th:text="#{signup.message}"> <span
+                        class="glyphicon glyphicon-user"></span> Registrate
+                </a></li>
+                <li sec:authorize="!isAuthenticated()"><a href="/login"
+                                                          th:text="#{login.message}"> <span
+                        class="glyphicon glyphicon-log-in"></span> Identifícate
+                </a></li>
+                <li id="desconexion" sec:authorize="isAuthenticated()"><a
+                        href="/logout"><span
+                        class="glyphicon glyphicon-log-out" value="Desconectarse"></span>
+                </a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block cuerpo %} {% endblock %}
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">&copy; SDI - myWallapop</span>
+    </div>
+</footer>
+</body>
+</html>

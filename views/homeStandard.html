@@ -1,0 +1,14 @@
+{% extends "templates/base.html" %}
+{% block cuerpo %}
+	<div id="users" class="container" style="text-align: center">
+
+		<h2>Bienvenidos a la aplicación</h2>
+		<p>Usuario Autenticado como:</p>
+		<span sec:authentication="principal.username" th:inline="text"></span>
+		<p id="balance" th:text="#{home.money} + ' ' + ${money} +'€'">Dinero actual:</p>
+		<h4>Ofertas del usuario</h4>
+
+		<div th:replace="fragments/salesTable"></div>
+
+	</div>
+{% endblock %}
