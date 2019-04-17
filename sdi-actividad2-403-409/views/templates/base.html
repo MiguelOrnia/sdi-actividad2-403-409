@@ -3,13 +3,17 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+
     </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+
     </script>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
+    <link rel="stylesheet" href="/css/custom.css"/>
 
 </head>
 <body>
@@ -41,7 +45,7 @@
                 <li id="users-menu" class="dropdown"
                     sec:authorize="hasRole('ROLE_STAND')"><a
                         class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar usuarios</span>
+                    <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar ofertas</span>
                     <span class="caret"></span>
                 </a>
                     <ul class="dropdown-menu">
@@ -65,7 +69,7 @@
                         class="glyphicon glyphicon-log-in"></span> Identifícate
                 </a></li>
                 <li id="desconexion" sec:authorize="isAuthenticated()"><a
-                        href="/logout"><span
+                        href="/desconectarse"><span
                         class="glyphicon glyphicon-log-out" value="Desconectarse"></span>
                 </a></li>
             </ul>

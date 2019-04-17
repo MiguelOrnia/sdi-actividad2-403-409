@@ -44,7 +44,7 @@ module.exports = function(app, swig, gestorBD) {
         var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
         var criterio = {
-            email : req.body.email,
+            email : req.body.username,
             password : seguro
         }
         gestorBD.obtenerUsuarios(criterio, function(usuarios) {
@@ -53,18 +53,24 @@ module.exports = function(app, swig, gestorBD) {
                 res.redirect("/identificarse" +
                     "?mensaje=Email o password incorrecto"+
                     "&tipoMensaje=alert-danger ");
-
             } else {
                 req.session.usuario = usuarios[0].email;
-                res.redirect("/publicaciones");
+                res.redirect("/home");
             }
         });
     });
 
     app.get('/desconectarse', function (req, res) {
         req.session.usuario = null;
-        res.send("Usuario desconectado");
+        res.redirect("/identificarse");
     })
 
+    app.get('/home', function (req, res) {
+        var respuesta = swig.renderFile('views/homeStandard.html', {});
+        res.send(respuesta);
+    })
 
+    app.get('/', function (req, res) {
+        res.redirect("/home");
+    })
 }
