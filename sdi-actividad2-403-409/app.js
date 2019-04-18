@@ -50,6 +50,7 @@ routerUsuarioSession.use(function (req, res, next) {
 });
 //Aplicar routerUsuarioSession
 //app.use("rutaParaAutorizar", routerUsuarioSession);
+app.use("/sales/*", routerUsuarioSession);
 
 
 app.use(express.static('public'));
@@ -66,9 +67,10 @@ gestorBD.init(app, mongo);
 
 //Rutas/controladores por lógica
 require("./routes/rusuarios")(app, swig, gestorBD);
+require("./routes/rofertas")(app, swig, gestorBD);
 
 app.get('/', function (req, res) {
-    res.redirect('/identificarse');
+    res.redirect('/home');
 });
 
 app.use(function (err, req, res, next) {

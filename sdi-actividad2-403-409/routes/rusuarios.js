@@ -1,10 +1,10 @@
-module.exports = function(app, swig, gestorBD) {
-    app.get("/registrarse", function(req, res) {
+module.exports = function (app, swig, gestorBD) {
+    app.get("/registrarse", function (req, res) {
         var respuesta = swig.renderFile('views/signup.html', {});
         res.send(respuesta);
     });
 
-    app.post('/registrarse', function(req, res) {
+    app.post('/registrarse', function (req, res) {
         if (req.body.email === null || req.body.email === "") {
             res.redirect("/registrarse?mensaje=El email no puede estar vacío");
         }
@@ -29,8 +29,8 @@ module.exports = function(app, swig, gestorBD) {
             .update(req.body.password).digest('hex');
 
         var usuario = {
-            email : req.body.email,
-            password : seguro,
+            email: req.body.email,
+            password: seguro,
             name: req.body.name,
             surname: req.body.surname,
             money: 100,
@@ -39,7 +39,7 @@ module.exports = function(app, swig, gestorBD) {
         }
 
         var criterio = {
-            email : usuario.email
+            email: usuario.email
         }
 
         gestorBD.obtenerUsuarios(criterio, function (usuarios) {
@@ -58,17 +58,17 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
-    app.get("/identificarse", function(req, res) {
+    app.get("/identificarse", function (req, res) {
         var respuesta = swig.renderFile('views/login.html', {});
         res.send(respuesta);
     });
 
-    app.post("/identificarse", function(req, res) {
+    app.post("/identificarse", function (req, res) {
         var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
         var criterio = {
-            email : req.body.username,
-            password : seguro
+            email: req.body.username,
+            password: seguro
         }
         gestorBD.obtenerUsuarios(criterio, function (usuarios) {
             if (usuarios == null || usuarios.length == 0) {
@@ -78,13 +78,22 @@ module.exports = function(app, swig, gestorBD) {
                     "&tipoMensaje=alert-danger ");
             } else {
                 req.session.usuario = usuarios[0];
-                if (usuarios[0].rol == "rol_estandar") {
-                    res.redirect("/homeStandard");
-                } else {
-                    res.redirect("/homeAdmin");
-                }
+                res.redirect("/home");
             }
         });
+    });
+
+    app.get("/home", function (req, res) {
+        var user = req.session.usuario;
+        if (user != null) {
+            if (user.rol == "rol_estandar") {
+                res.redirect("/homeStandard");
+            } else {
+                res.redirect("/homeAdmin");
+            }
+        } else {
+            res.redirect("/identificarse");
+        }
     });
 
     app.get('/desconectarse', function (req, res) {
