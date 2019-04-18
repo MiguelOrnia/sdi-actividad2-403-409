@@ -4,8 +4,8 @@
 		<h2>Bienvenidos a la aplicación</h2>
 		<h3>Esta es una zona privada de la web</h3>
 		<p>
-			Usuario Administrador Autenticado como : <span
-				sec:authentication="principal.username" th:inline="text"> </span>
+			Usuario Administrador Autenticado como :
+			<span>{{user.email}</span>
 		</p>
 	</div>
 {% endblock %}

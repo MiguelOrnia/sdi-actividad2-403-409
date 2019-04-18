@@ -31,42 +31,40 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
                 <li id="home"><a href="/">Home</a></li>
-                <li id="users-menu" class="dropdown"
-                    sec:authorize="hasRole('ROLE_ADMIN')"><a
-                        class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span th:text="#{nav.manage.users}" th:remove="tag">Gestionar usuarios</span>
-                    <span class="caret"></span>
-                </a>
-                    <ul class="dropdown-menu">
-                        <li id="usuarios"><a href="/user/list">Ver Usuarios</a></li>
-                    </ul>
-                </li>
-
-                <li id="users-menu" class="dropdown"
-                    sec:authorize="hasRole('ROLE_STAND')"><a
-                        class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar ofertas</span>
-                    <span class="caret"></span>
-                </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/sales/add">Agregar oferta</a></li>
-                        <li><a href="/sales/list">Listar ofertas</a></li>
-                        <li><a href="/sales/search">Buscar ofertas</a></li>
-                        <li><a href="/sales/purchased">Lista de ofertas
-                            compradas</a></li>
-                    </ul>
-                </li>
+                {% if user.rol == 'rol_admin' %}
+                    <li id="users-menu" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span th:text="#{nav.manage.users}" th:remove="tag">Gestionar usuarios</span>
+                        <span class="caret"></span>
+                    </a>
+                        <ul class="dropdown-menu">
+                            <li id="usuarios"><a href="/user/list">Ver Usuarios</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.rol == 'rol_estandar' %}
+                    <li id="users-menu" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar ofertas</span>
+                        <span class="caret"></span>
+                    </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/sales/add">Agregar oferta</a></li>
+                            <li><a href="/sales/list">Listar ofertas</a></li>
+                            <li><a href="/sales/search">Buscar ofertas</a></li>
+                            <li><a href="/sales/purchased">Lista de ofertas
+                                compradas</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
                 <li><a href="/messages">Mensajes</a></li>
-
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li sec:authorize="!isAuthenticated()"><a href="/signup"
-                                                          th:text="#{signup.message}"> <span
-                        class="glyphicon glyphicon-user"></span> Registrate
+                <li sec:authorize="!isAuthenticated()"><a href="/signup">
+                    <span class="glyphicon glyphicon-user"></span> Registrate
                 </a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/login"
-                                                          th:text="#{login.message}"> <span
-                        class="glyphicon glyphicon-log-in"></span> Identifícate
+                <li sec:authorize="!isAuthenticated()"><a href="/login">
+                    <span class="glyphicon glyphicon-log-in"></span> Identifícate
                 </a></li>
                 <li id="desconexion" sec:authorize="isAuthenticated()"><a
                         href="/desconectarse"><span
