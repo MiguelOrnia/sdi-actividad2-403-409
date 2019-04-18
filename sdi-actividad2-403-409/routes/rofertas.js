@@ -6,7 +6,23 @@ module.exports = function(app, swig, gestorBD) {
     });
 
     app.post("/sales/add", function (req, res) {
-
+        if(req.session.usuario!=null){
+        var sale = {
+            title: req.body.title,
+            details: req.body.details,
+            price: req.body.price
+        }
+        // Conectarse
+        gestorBD.addSale(sale, function (id) {
+            if (id == null) {
+                res.send("Error al insertar canción");
+            } else {
+                res.redirect("/home");
+            }
+        });
+        }else{
+            res.redirect("/identificarse");
+        }
     });
 
     app.get("/sales/list", function (req, res) {

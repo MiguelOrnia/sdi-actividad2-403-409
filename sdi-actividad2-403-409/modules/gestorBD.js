@@ -5,6 +5,7 @@ module.exports = {
         this.mongo = mongo;
         this.app = app;
     },
+    // Gestion de usuarios
     obtenerUsuarios : function(criterio, funcionCallback){
         this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
             if (err) {
@@ -33,6 +34,24 @@ module.exports = {
                         funcionCallback(null);
                     } else {
                         funcionCallback(result.ops[0]._id);
+                    }
+                    db.close();
+                });
+            }
+        });
+    },
+    //Gestion de ofertas
+    addSale: function(sale, callbackFunction){
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                callbackFunction(null);
+            } else {
+                var collection = db.collection('sales');
+                collection.insert(sale, function(err, result) {
+                    if (err) {
+                        callbackFunction(null);
+                    } else {
+                        callbackFunction(result.ops[0]._id);
                     }
                     db.close();
                 });
