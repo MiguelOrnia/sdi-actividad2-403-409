@@ -9,6 +9,14 @@ module.exports = function (app, swig, gestorBD) {
             res.redirect("/registrarse?mensaje=El email no puede estar vacío");
         }
 
+        if (req.body.name === null || req.body.name === "") {
+            res.redirect("/registrarse?mensaje=El nombre no puede estar vacío");
+        }
+
+        if (req.body.surname === null || req.body.surname === "") {
+            res.redirect("/registrarse?mensaje=El apellido no puede estar vacío");
+        }
+
         if (req.body.password === null || req.body.password === "") {
             res.redirect("/registrarse?mensaje=La contraseña no puede estar vacía");
         }
@@ -25,37 +33,39 @@ module.exports = function (app, swig, gestorBD) {
             res.redirect("/registrarse?mensaje=Las contraseñas no coinciden");
         }
 
-        var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
-            .update(req.body.password).digest('hex');
+        else {
+            var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
+                .update(req.body.password).digest('hex');
 
-        var usuario = {
-            email: req.body.email,
-            password: seguro,
-            name: req.body.name,
-            surname: req.body.surname,
-            money: 100,
-            rol: "rol_estandar",
-            active: true
-        }
-
-        var criterio = {
-            email: usuario.email
-        }
-
-        gestorBD.obtenerUsuarios(criterio, function (usuarios) {
-            if (usuarios != null && usuarios.length != 0) {
-                res.redirect("/registrarse?mensaje=El correo ya está registrado. Inténtelo de nuevo con un " +
-                    "correo diferente");
-            } else {
-                gestorBD.insertarUsuario(usuario, function (id) {
-                    if (id == null) {
-                        res.redirect("/registrarse?mensaje=Error al registrar usuario");
-                    } else {
-                        res.redirect("/identificarse?mensaje=Nuevo usuario registrado");
-                    }
-                })
+            var usuario = {
+                email: req.body.email,
+                password: seguro,
+                name: req.body.name,
+                surname: req.body.surname,
+                money: 100,
+                rol: "rol_estandar",
+                active: true
             }
-        });
+
+            var criterio = {
+                email: usuario.email
+            }
+
+            gestorBD.obtenerUsuarios(criterio, function (usuarios) {
+                if (usuarios != null && usuarios.length != 0) {
+                    res.redirect("/registrarse?mensaje=El correo ya está registrado. Inténtelo de nuevo con un " +
+                        "correo diferente");
+                } else {
+                    gestorBD.insertarUsuario(usuario, function (id) {
+                        if (id == null) {
+                            res.redirect("/registrarse?mensaje=Error al registrar usuario");
+                        } else {
+                            res.redirect("/identificarse?mensaje=Nuevo usuario registrado");
+                        }
+                    })
+                }
+            });
+        }
     });
 
     app.get("/identificarse", function (req, res) {
@@ -74,8 +84,7 @@ module.exports = function (app, swig, gestorBD) {
             if (usuarios == null || usuarios.length == 0) {
                 req.session.usuario = null;
                 res.redirect("/identificarse" +
-                    "?mensaje=Email o password incorrecto" +
-                    "&tipoMensaje=alert-danger ");
+                    "?mensaje=Email o password incorrecto");
             } else {
                 req.session.usuario = usuarios[0];
                 res.redirect("/home");

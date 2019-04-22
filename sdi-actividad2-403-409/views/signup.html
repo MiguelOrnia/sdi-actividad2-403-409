@@ -10,28 +10,97 @@
 			<form method="post" action="/registrarse">
 				<label class="control-label" for="email">Correo electrónico</label>
 				<input type="text" name="email"
-						placeholder="user@email.com" required="true" /> 
+						placeholder="user@email.com" required="true" />
+				<div id="errorEmail" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && mensaje.includes("email")) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorEmail")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
 
-				
 				<label class="control-label" for="name">Nombre</label>
 				<input type="text" name="name"
 						placeholder="Juan" required="true" />
-				
+				<div id="errorNombre" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && mensaje.includes("nombre")) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorNombre")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
+
 				<label class="control-label" for="surname">Apellidos</label>
 				<input type="text" name="surname"
 						placeholder="Peréz Almonte" required="true" />
-				
+				<div id="errorApellido" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && mensaje.includes("apellido")) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorApellido")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
+
 				<label class="control-label" for="password">Contraseña</label>
 				<input type="password" name="password"
 						placeholder="Entre el Password" />
-				
+				<div id="errorPassword" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && (mensaje.includes("caracteres") || mensaje.includes("vacia"))) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorPassword")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
+
 				<label class="control-label" for="repassword">Recontraseña</label>
 				<input type="password" name="repassword"
 						placeholder="Repita el Password" />
-						
+				<div id="errorRepassword" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && (mensaje.includes("coinciden") || mensaje.includes("repita"))) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorRepassword")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
+
 				<input id="enviar" type="submit" value="Enviar">
 			</form>
-			<!-- Remind Passowrd -->
+			<!-- Remind Password -->
 			<div id="formFooter">
 				<a class="underlineHover" href="/identificarse">Iniciar sesión</a>
 			</div>

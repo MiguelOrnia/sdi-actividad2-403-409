@@ -14,7 +14,22 @@
 				<input type="text" id="login"  name="username" placeholder="Email" required="true"> 
 				
 				<input type="password" id="password" name="password" placeholder="Password" required="true">
-					
+
+				<div id="loginError" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && (mensaje.includes("incorrecto"))) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#loginError")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
+
 				<input id="enviar" type="submit" value="Enviar">
 			</form>
 

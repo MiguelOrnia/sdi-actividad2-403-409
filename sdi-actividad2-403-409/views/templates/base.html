@@ -34,7 +34,7 @@
                 {% if user.rol == 'rol_admin' %}
                     <li id="users-menu" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span th:text="#{nav.manage.users}" th:remove="tag">Gestionar usuarios</span>
+                        <span th:remove="tag">Gestionar usuarios</span>
                         <span class="caret"></span>
                     </a>
                         <ul class="dropdown-menu">
@@ -45,7 +45,7 @@
                 {% if user.rol == 'rol_estandar' %}
                     <li id="users-menu" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span th:text="#{nav.manage.sales}" th:remove="tag">Gestionar ofertas</span>
+                        <span th:remove="tag">Gestionar ofertas</span>
                         <span class="caret"></span>
                     </a>
                         <ul class="dropdown-menu">
