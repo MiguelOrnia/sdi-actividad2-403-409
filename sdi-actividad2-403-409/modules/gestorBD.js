@@ -6,7 +6,7 @@ module.exports = {
         this.app = app;
     },
     // Gestion de usuarios
-    obtenerUsuarios : function(criterio, funcionCallback){
+    obtenerUsuarios: function(criterio, funcionCallback){
         this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
             if (err) {
                 funcionCallback(null);
@@ -23,7 +23,7 @@ module.exports = {
             }
         });
     },
-    insertarUsuario : function(usuario, funcionCallback) {
+    insertarUsuario: function(usuario, funcionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
             if (err) {
                 funcionCallback(null);
@@ -34,6 +34,25 @@ module.exports = {
                         funcionCallback(null);
                     } else {
                         funcionCallback(result.ops[0]._id);
+                    }
+                    db.close();
+                });
+            }
+        });
+    },
+    eliminarUsuarios: function (criterio, nuevoCriterio, callbackFunction) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                callbackFunction(null);
+            } else {
+                var collection = db.collection('usuarios');
+                collection.updateMany(criterio, {
+                    $set: nuevoCriterio
+                }, function (err, result) {
+                    if (err) {
+                        callbackFunction(null);
+                    } else {
+                        callbackFunction(result);
                     }
                     db.close();
                 });

@@ -1,0 +1,52 @@
+{% extends "../templates/base.html" %}
+{% block cuerpo %}
+<form class="container" method="post" action="/user/delete">
+    <h2>Usuarios</h2>
+    <p>Los usuarios que actualmente figuran en el sistema son los
+        siguientes:</p>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Borrar</th>
+                <th class="col-md-1"></th>
+                <th class="col-md-1"></th>
+                <th class="col-md-1"></th>
+                <th class="col-md-1"></th>
+                <th class="col-md-1"></th>
+            </tr>
+            </thead>
+            {% for user in usersList%}
+            <tbody>
+                {% if user.active && user.rol !== "rol_admin"%}
+                <td>{{user.email}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>
+                    <input class="checkBox" type="checkbox" name="email" value="{{user.email}}" />
+                </td>
+                {% endif %}
+            </tbody>
+            {% endfor %}
+        </table>
+        <div id="deleteError" style="text-align: center">
+            <script src="/js/message.js"></script>
+            <script>
+                var mensaje = getUrlParameter('mensaje');
+                var tipoMensaje = getUrlParameter('tipoMensaje');
+                if (mensaje != "" && (mensaje.includes("Error de borrado"))) {
+                    if (tipoMensaje == "") {
+                        tipoMensaje = 'alert-danger';
+                    }
+                    $("#deleteError")
+                        .append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+                }
+            </script>
+        </div>
+        <button id="delete" type="submit">Borrar</button>
+    </div>
+</form>
+{% endblock %}

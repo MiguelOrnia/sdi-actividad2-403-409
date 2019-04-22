@@ -139,16 +139,41 @@ module.exports = function (app, swig, gestorBD) {
         }
     });
 
-    app.get("/usuarios/list", function (req, res) {
+    app.get("/user/list", function (req, res) {
         if (req.session.usuario === null || req.session.usuario.rol != "rol_admin") {
             res.redirect("/homeStandard?mensaje=No puede acceder a esta zona de la web");
         } else {
             gestorBD.obtenerUsuarios({}, function (usuarios) {
-                let respuesta = swig.renderFile('views/userList.html', {
+                let respuesta = swig.renderFile('views/user/list.html', {
                     usersList: usuarios
                 });
                 res.send(respuesta);
             });
+        }
+    });
+
+    app.post("/user/delete", function (req, res) {
+        var criterio;
+        if (typeof(req.body.email) == "object") {
+            criterio = {email: {$in: req.body.email}};
+        }
+
+        if (typeof(req.body.email) == "string") {
+            criterio = {email: req.body.email};
+        }
+        var criterioEliminar = {active : false};
+        if (criterio != null) {
+            gestorBD.eliminarUsuarios(criterio, criterioEliminar, function (usuarios) {
+                if (usuarios == null || usuarios.length == 0) {
+                    res.redirect("/user/list" +
+                        "?mensaje=Los usuarios no pudieron ser eliminados");
+                } else {
+                    res.redirect("/user/list" +
+                        "?mensaje=Los usuarios se eliminaron correctamente");
+                }
+            });
+        } else {
+            res.redirect("/user/list");
         }
     });
 }
