@@ -1,12 +1,14 @@
 module.exports = function(app, swig, gestorBD) {
 
     app.get("/sales/add", function (req, res) {
-        var respuesta = swig.renderFile('views/sales/add.html', {});
+        var respuesta = swig.renderFile('views/sales/add.html', {
+            user: req.session.usuario
+        });
         res.send(respuesta);
     });
 
     app.post("/sales/add", function (req, res) {
-        if(req.session.usuario!=null){
+        if(req.session.usuario !== undefined){
         var sale = {
             title: req.body.title,
             details: req.body.details,
@@ -20,7 +22,7 @@ module.exports = function(app, swig, gestorBD) {
                 res.redirect("/home");
             }
         });
-        }else{
+        } else {
             res.redirect("/identificarse");
         }
     });

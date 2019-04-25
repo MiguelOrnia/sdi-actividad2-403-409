@@ -21,19 +21,13 @@ module.exports = function (app, swig, gestorBD) {
             res.redirect("/registrarse?mensaje=La contraseña no puede estar vacía");
         }
 
-        if (req.body.password.length >= 0 && req.body.password.length < 8) {
-            res.redirect("/registrarse?mensaje=La contraseña debe tener más de 8 caracteres");
-        }
-
         if (req.body.repassword.length >= 0 && req.body.repassword.length < 8) {
             res.redirect("/registrarse?mensaje=Repita la contraseña");
         }
 
         if (req.body.repassword != req.body.password) {
             res.redirect("/registrarse?mensaje=Las contraseñas no coinciden");
-        }
-
-        else {
+        } else {
             var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
                 .update(req.body.password).digest('hex');
 
@@ -145,6 +139,7 @@ module.exports = function (app, swig, gestorBD) {
         } else {
             gestorBD.obtenerUsuarios({}, function (usuarios) {
                 let respuesta = swig.renderFile('views/user/list.html', {
+                    user: req.session.usuario,
                     usersList: usuarios
                 });
                 res.send(respuesta);
@@ -154,17 +149,17 @@ module.exports = function (app, swig, gestorBD) {
 
     app.post("/user/delete", function (req, res) {
         var criterio;
-        if (typeof(req.body.email) == "object") {
+        if (typeof (req.body.email) === "object") {
             criterio = {email: {$in: req.body.email}};
         }
 
-        if (typeof(req.body.email) == "string") {
+        if (typeof (req.body.email) === "string") {
             criterio = {email: req.body.email};
         }
-        var criterioEliminar = {active : false};
-        if (criterio != null) {
+        var criterioEliminar = {active: false};
+        if (criterio !== undefined) {
             gestorBD.eliminarUsuarios(criterio, criterioEliminar, function (usuarios) {
-                if (usuarios == null || usuarios.length == 0) {
+                if (usuarios === null || usuarios.length === 0) {
                     res.redirect("/user/list" +
                         "?mensaje=Los usuarios no pudieron ser eliminados");
                 } else {

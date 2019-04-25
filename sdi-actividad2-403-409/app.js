@@ -82,7 +82,7 @@ app.use(function (err, req, res, next) {
 });
 
 
-// lanzarel servidor
+// lanzar el servidor
 app.listen(app.get('port'), function () {
     console.log("Servidor activo");
 });

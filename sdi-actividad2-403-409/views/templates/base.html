@@ -3,18 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <script
-            src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
-
-    </script>
-    <script
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
-
-    </script>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/custom.css"/>
-
 </head>
 <body>
 <nav class="navbar">
@@ -27,11 +19,11 @@
             </button>
             <a href="/"><img src="/img/myWallapop-small.svg" alt="logo"/></a>
         </div>
-
         <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+            {% if user !== undefined %}
+            <ul class="nav navbar-nav">
                 <li id="home"><a href="/">Home</a></li>
-                {% if user.rol == 'rol_admin' %}
+                {% if user !== undefined && user.rol === 'rol_admin' %}
                     <li id="users-menu" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span th:remove="tag">Gestionar usuarios</span>
@@ -42,7 +34,7 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if user.rol == 'rol_estandar' %}
+                {% if user !== undefined && user.rol === 'rol_estandar' %}
                     <li id="users-menu" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span th:remove="tag">Gestionar ofertas</span>
@@ -57,19 +49,23 @@
                         </ul>
                     </li>
                 {% endif %}
-                <li><a href="/messages">Mensajes</a></li>
             </ul>
+            {% endif %}
             <ul class="nav navbar-nav navbar-right">
-                <li sec:authorize="!isAuthenticated()"><a href="/signup">
+                {% if user === undefined %}
+                <li><a href="/signup">
                     <span class="glyphicon glyphicon-user"></span> Registrate
                 </a></li>
-                <li sec:authorize="!isAuthenticated()"><a href="/login">
+                <li><a href="/login">
                     <span class="glyphicon glyphicon-log-in"></span> Identifícate
                 </a></li>
-                <li id="desconexion" sec:authorize="isAuthenticated()"><a
+                {% endif %}
+                {% if user !== undefined %}
+                <li id="desconexion"><a
                         href="/desconectarse"><span
                         class="glyphicon glyphicon-log-out" value="Desconectarse"></span>
                 </a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
