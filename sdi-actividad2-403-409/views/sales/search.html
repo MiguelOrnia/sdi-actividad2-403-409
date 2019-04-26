@@ -1,0 +1,57 @@
+{% extends "../templates/base.html" %}
+{% block cuerpo %}
+<div class="container">
+<h2>Listado de ofertas completo</h2>
+        <section style="margin-bottom: 20px">
+            <form class="navbar-form" method="get" action="/sales/search">
+                <div class="form-group">
+                    <input name="searchText" type="text" class="form-control" size="50"
+                          placeholder="Buscar"/>
+                </div>
+                <button id="search" type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </section>
+        <section>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Detalles</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for sale in sales %}
+                <tr class="table-light">
+                    <td>{{sale.title}}</td>
+                    <td>{{sale.details}}</td>
+                    <td>{{sale.price}}</td>
+                    <td></td>
+                    <td>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </section>
+
+    <!--Paginaciónmostrarlaactual y 2 anterioresy dossiguientes-->
+    <div class="row text-center">
+        <ul class="pagination">
+            {% for pagina in paginas %}
+            <li class="page-item" id="pi-{{ pagina}}">
+                <a class="page-link" href="/tienda?pg={{ pagina }}" >{{ pagina }}</a>
+            </li>
+            {% endfor %}
+            <script>
+                $( "#pi-{{ actual}}" ).addClass("active");
+            </script>
+
+        </ul>
+    </div>
+</div>
+{% endblock %}

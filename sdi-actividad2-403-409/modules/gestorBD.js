@@ -110,5 +110,25 @@ module.exports = {
                 });
             }
         });
-    }
+    },
+    obtenerOfertasPg : function(criterio,pg,funcionCallback){
+        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('sales');
+                collection.count(function(err, count){
+                    collection.find(criterio).skip( (pg-1)*5 ).limit( 5 )
+                        .toArray(function(err, sales) {
+                            if (err) {
+                                funcionCallback(null);
+                            } else {
+                                funcionCallback(sales, count);
+                            }
+                            db.close();
+                        });
+                });
+            }
+        });
+    },
 };
