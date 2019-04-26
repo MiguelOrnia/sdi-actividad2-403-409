@@ -43,6 +43,17 @@ module.exports = function (app, swig, gestorBD) {
         });
     });
 
+    app.get('/sales/delete/:id', function (req, res) {
+        var criterio = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
+        gestorBD.eliminarOferta(criterio, function (ofertas) {
+            if (ofertas == null) {
+                res.send("Could not delete song");
+            } else {
+                res.redirect("/sales/list");
+            }
+        });
+    })
+
     app.get("/sales/search", function (req, res) {
 
     });

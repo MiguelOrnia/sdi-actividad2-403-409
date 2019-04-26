@@ -19,7 +19,7 @@
                 <td>{{sale.title}}</td>
                 <td>{{sale.details}}</td>
                 <td>{{sale.price}}€</td>
-                <td><a class="deleteSale" href="/sales/delete/{{sale.id}}">eliminar</a></td>
+                <td><a class="deleteSale" href="/sales/delete/{{sale._id.toString()}}">eliminar</a></td>
             </tr>
             {% endfor %}
             </tbody>

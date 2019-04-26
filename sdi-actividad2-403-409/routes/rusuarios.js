@@ -89,10 +89,10 @@ module.exports = function (app, swig, gestorBD) {
     app.get("/home", function (req, res) {
         var user = req.session.usuario;
         if (user != null) {
-            if (user.rol == "rol_estandar") {
-                res.redirect("/homeStandard");
-            } else {
+            if (user.rol == "rol_admin") {
                 res.redirect("/homeAdmin");
+            } else {
+                res.redirect("/homeStandard");
             }
         } else {
             res.redirect("/identificarse");

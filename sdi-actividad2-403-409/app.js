@@ -3,9 +3,9 @@ var express = require('express');
 var app = express();
 
 var rest = require('request');
-app.set('rest',rest);
+app.set('rest', rest);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "POST, GET, DELETE, UPDATE, PUT");
@@ -50,6 +50,28 @@ routerUsuarioSession.use(function (req, res, next) {
 //Aplicar routerUsuarioSession
 //app.use("rutaParaAutorizar", routerUsuarioSession);
 app.use("/sales/*", routerUsuarioSession);
+
+
+//routerUsuarioAutor
+var routerUsuarioAutor = express.Router();
+routerUsuarioAutor.use(function(req, res, next) {
+    console.log("routerUsuarioAutor");
+    var path = require('path');
+    var id = path.basename(req.originalUrl);
+    // Cuidado porque req.params no funciona
+    // en el router si los params van en la URL.
+    gestorBD.obtenerOfertas(
+        {_id: mongo.ObjectID(id) }, function (canciones) {
+            console.log(canciones[0]);
+            if(canciones[0].seller._id == req.session.usuario._id ){
+                next();
+            } else {
+                res.redirect("/");
+            }
+        })
+})
+//Aplicar routerUsuarioAutor
+app.use("/sales/delete", routerUsuarioAutor);
 
 
 app.use(express.static('public'));
