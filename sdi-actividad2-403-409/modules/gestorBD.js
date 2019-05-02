@@ -6,13 +6,13 @@ module.exports = {
         this.app = app;
     },
     // Gestion de usuarios
-    obtenerUsuarios: function(criterio, funcionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    obtenerUsuarios: function (criterio, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('usuarios');
-                collection.find(criterio).toArray(function(err, usuarios) {
+                collection.find(criterio).toArray(function (err, usuarios) {
                     if (err) {
                         funcionCallback(null);
                     } else {
@@ -23,13 +23,13 @@ module.exports = {
             }
         });
     },
-    insertarUsuario: function(usuario, funcionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    insertarUsuario: function (usuario, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('usuarios');
-                collection.insert(usuario, function(err, result) {
+                collection.insert(usuario, function (err, result) {
                     if (err) {
                         funcionCallback(null);
                     } else {
@@ -60,13 +60,13 @@ module.exports = {
         });
     },
     //Gestion de ofertas
-    addSale: function(sale, callbackFunction){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    addSale: function (sale, callbackFunction) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 callbackFunction(null);
             } else {
                 var collection = db.collection('sales');
-                collection.insert(sale, function(err, result) {
+                collection.insert(sale, function (err, result) {
                     if (err) {
                         callbackFunction(null);
                     } else {
@@ -77,13 +77,13 @@ module.exports = {
             }
         });
     },
-    obtenerOfertas : function(criterio, funcionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    obtenerOfertas: function (criterio, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('sales');
-                collection.find(criterio).toArray(function(err, ofertas) {
+                collection.find(criterio).toArray(function (err, ofertas) {
                     if (err) {
                         funcionCallback(null);
                     } else {
@@ -94,13 +94,13 @@ module.exports = {
             }
         });
     },
-    eliminarOferta : function(criterio, funcionCallback) {
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    eliminarOferta: function (criterio, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('sales');
-                collection.remove(criterio, function(err, result) {
+                collection.remove(criterio, function (err, result) {
                     if (err) {
                         funcionCallback(null);
                     } else {
@@ -111,15 +111,15 @@ module.exports = {
             }
         });
     },
-    obtenerOfertasPg : function(criterio,pg,funcionCallback){
-        this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
+    obtenerOfertasPg: function (criterio, pg, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 var collection = db.collection('sales');
-                collection.count(function(err, count){
-                    collection.find(criterio).skip( (pg-1)*5 ).limit( 5 )
-                        .toArray(function(err, sales) {
+                collection.count(function (err, count) {
+                    collection.find(criterio).skip((pg - 1) * 5).limit(5)
+                        .toArray(function (err, sales) {
                             if (err) {
                                 funcionCallback(null);
                             } else {
@@ -131,8 +131,39 @@ module.exports = {
             }
         });
     },
+    comprarOferta: function (criterio, buyer, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('sales');
+
+                collection.find(criterio).limit(1).toArray(function(err, sales){
+                    if(err){
+                        funcionCallback(null);
+                    }else{
+                        if(sales[0].seller._id.toString() != buyer._id.toString()){
+                            // Si el comprador no es el vendedor marcamos la oferta como comprada
+                            var compra = {buyer: buyer};
+                            collection.update(criterio, {$set: compra}, function (err, result) {
+                                if (err) {
+                                    funcionCallback(null);
+                                } else {
+                                    funcionCallback(result);
+                                }
+
+                            });
+                        }else{
+                            funcionCallback(null);
+                        }
+                    }
+                    db.close();
+                })
+            }
+        });
+    },
     // Gestion de mensajes (API)
-    insertarMensaje:function (message, funcionCallback) {
+    insertarMensaje: function (message, funcionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);

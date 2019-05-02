@@ -13,7 +13,8 @@ module.exports = function (app, swig, gestorBD) {
                 title: req.body.title,
                 details: req.body.details,
                 price: req.body.price,
-                seller: req.session.usuario
+                seller: req.session.usuario,
+                buyer: null,
             }
             // Conectarse
             gestorBD.addSale(sale, function (id) {
@@ -36,7 +37,8 @@ module.exports = function (app, swig, gestorBD) {
             } else {
                 var respuesta = swig.renderFile('views/sales/list.html',
                     {
-                        salesList: sales
+                        salesList: sales,
+                        user: req.session.usuario
                     });
                 res.send(respuesta);
             }
@@ -56,10 +58,10 @@ module.exports = function (app, swig, gestorBD) {
 
 
     app.get("/sales/search", function (req, res) {
-        var criterio = {};
+        var criterio = { buyer: null};
 
-        if (req.query.busqueda != null) {
-            criterio = {"nombre": {$regex: ".*" + req.query.busqueda + ".*", $options: 'i'}};
+        if (req.query.searchText != null) {
+            criterio = {"title": {$regex: ".*" + req.query.searchText + ".*", $options: 'i'}, "isSold" : false};
         }
 
         var pg = parseInt(req.query.pg); // Es String !!!
@@ -85,7 +87,8 @@ module.exports = function (app, swig, gestorBD) {
                     {
                         sales: ofertas,
                         paginas: paginas,
-                        actual: pg
+                        actual: pg,
+                        user: req.session.usuario
                     });
                 res.send(respuesta);
             }
@@ -94,6 +97,20 @@ module.exports = function (app, swig, gestorBD) {
 
     app.get("/sales/purchased", function (req, res) {
 
+    });
+
+    app.get("/sales/buy/:id", function (req, res) {
+        var id = req.params.id;
+        var criterio = {"_id": gestorBD.mongo.ObjectID(id)};
+        var buyer = req.session.usuario;
+
+        gestorBD.comprarOferta(criterio, buyer, function(result){
+            if(result==null){
+                res.send("Error al comprar oferta: "+id);
+            }else{
+                res.redirect("/sales/search");
+            }
+        });
     });
 
 }

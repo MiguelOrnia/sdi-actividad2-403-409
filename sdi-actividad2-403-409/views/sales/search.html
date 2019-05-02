@@ -31,6 +31,12 @@
                     <td>{{sale.price}}</td>
                     <td></td>
                     <td>
+                        {% if (sale.seller._id.toString() != user._id.toString()) %}
+                        <a href="/sales/buy/{{sale._id.toString()}}">Comprar</a>
+                        {% endif %}
+                        {% if (sale.seller._id.toString() == user._id.toString()) %}
+                        <a href="/sales/delete/{{sale._id.toString()}}">Dar de baja</a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
