@@ -1,0 +1,53 @@
+<div id="widget-ofertas" >
+    <input type="text" class="form-control" placeholder="Filtrar por nombre"
+           id="filtro-nombre"/>
+    <button class="btn" onclick="cargarOfertas()" >Actualizar</button>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nombre </th>
+            <th>Descripcion</th>
+            <th> Precio </th>
+            <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody id="tablaCuerpo">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var ofertas;
+    function cargarOfertas(){
+        $.ajax({
+            url: URLbase + "/oferta",
+            type: "GET",
+            data: { },
+            dataType: 'json',
+            headers: { "token": token },
+            success: function(respuesta) {
+                ofertas = respuesta;
+                actualizarTabla(ofertas);
+            },
+            error : function (error){
+                $( "#contenedor-principal" ).load("widget-login.html");
+            }
+        });
+    }
+    function actualizarTabla(ofertasMostrar){
+        $( "#tablaCuerpo" ).empty(); // Vaciar la tabla
+        for (i = 0; i < ofertasMostrar.length; i++) {
+            $( "#tablaCuerpo" ).append(
+                "<tr id="+ofertasMostrar[i]._id+">"+
+                "<td>"+ofertasMostrar[i].title+"</td>" +
+                "<td>"+ofertasMostrar[i].description+"</td>" +
+                "<td>"+ofertasMostrar[i].price+"</td>" +
+                "</tr>" );
+        }
+    }
+    function widgetOfertas(){
+        $( "#contenedor-principal" ).load( "widget-ofertas.html");
+    }
+    cargarOfertas();
+</script>

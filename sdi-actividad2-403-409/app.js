@@ -82,6 +82,40 @@ routerUsuarioAutor.use(function(req, res, next) {
 app.use("/sales/delete", routerUsuarioAutor);
 
 
+// routerUsuarioToken
+var routerUsuarioToken = express.Router();
+routerUsuarioToken.use(function (req, res, next) {
+    // obtener el token, vía headers (opcionalmente GET y/o POST).
+    var token = req.headers['token'] || req.body.token || req.query.token;
+    if (token != null) {
+        // verificar el token
+        jwt.verify(token, 'secreto', function (err, infoToken) {
+            if (err || (Date.now() / 1000 - infoToken.tiempo) > 24000) {
+                res.status(403); // Forbidden
+                res.json({
+                    acceso: false,
+                    error: 'Token inválido o caducado'
+                });
+            } else {
+                // dejamos correr la petición
+                console.log(infoToken)
+                res.usuario = infoToken.usuario;
+                next();
+            }
+        });
+    } else {
+        res.status(403); // Forbidden
+        res.json({
+            acceso: false,
+            mensaje: 'No hay Token'
+        });
+    }
+});
+// Aplicar routerUsuarioToken
+app.use('/api/sales', routerUsuarioToken);
+app.use('/api/sales/message/:id', routerUsuarioToken);
+app.use('/api/sales/conversation/:id', routerUsuarioToken);
+
 app.use(express.static('public'));
 var mongo = require('mongodb');
 

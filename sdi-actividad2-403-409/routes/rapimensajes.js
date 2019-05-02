@@ -1,9 +1,9 @@
 module.exports = function (app, gestorBD) {
 
     app.post("/api/identificarse/", function (req, res) {
-        var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
+        let seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
-        var criterio = {
+        let criterio = {
             email: req.body.email,
             password: seguro
         }
@@ -162,5 +162,25 @@ module.exports = function (app, gestorBD) {
                 });
             }
         });
+    });
+
+    app.get("/api/message/leido/:id", function (req, res) {
+        let criterio = {
+            "_id": gestorBD.mongo.ObjectID(req.params.id)
+        }
+        gestorBD.marcarLeido(criterio, function (mensajes) {
+            if (mensajes == null) {
+                res.status(500);
+                app.get("logger").error('Se ha producido un error al leer mensajes');
+
+                res.json({
+                    error: "Se ha producido un error"
+                });
+            } else {
+                res.status(200);
+                app.get("logger").info('Se ha leído mensaje');
+                res.send( mensajes);
+            }
+        })
     });
 };
