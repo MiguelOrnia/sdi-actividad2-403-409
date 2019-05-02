@@ -5,6 +5,14 @@ var app = express();
 var rest = require('request');
 app.set('rest', rest);
 
+let log4js = require('log4js');
+log4js.configure({
+    appenders: {wallapop: {type: 'file', filename: 'logs/wallapop.log'}},
+    categories: {default: {appenders: ['wallapop'], level: 'trace'}}
+});
+let logger = log4js.getLogger('wallapop');
+app.set('logger', logger);
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -89,6 +97,7 @@ gestorBD.init(app, mongo);
 //Rutas/controladores por lógica
 require("./routes/rusuarios")(app, swig, gestorBD);
 require("./routes/rofertas")(app, swig, gestorBD);
+require("./routes/rapimensajes")(app, gestorBD);
 
 app.get('/', function (req, res) {
     res.redirect('/home');
