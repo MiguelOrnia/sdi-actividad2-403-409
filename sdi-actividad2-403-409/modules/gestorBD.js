@@ -131,7 +131,6 @@ module.exports = {
             }
         });
     },
-    },
     // Gestion de mensajes (API)
     insertarMensaje:function (message, funcionCallback) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
