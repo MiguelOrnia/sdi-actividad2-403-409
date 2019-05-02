@@ -1,0 +1,27 @@
+{% extends "../templates/base.html" %}
+{% block cuerpo %}
+<div class="container">
+    <h2>Compras realizadas</h2>
+    <div class="table-responsive">
+        <table class="table table-hover"
+               id="tableSales">
+            <thead class="table-dark">
+            <tr class="text-center">
+                <th class="col-md-2">Titulo</th>
+                <th>Detalles</th>
+                <th class="col-md-2">Precio</th>
+            </tr>
+            </thead>
+            <tbody class="table-light">
+            {% for sale in salesList %}
+            <tr class="text-center">
+                <td>{{sale.title}}</td>
+                <td>{{sale.details}}</td>
+                <td>{{sale.price}}€</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

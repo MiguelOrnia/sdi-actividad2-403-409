@@ -96,7 +96,21 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.get("/sales/purchased", function (req, res) {
+        var buyer = req.session.usuario;
+        var criterio = {buyer: buyer};
 
+        gestorBD.obtenerOfertas(criterio, function (sales) {
+            if (sales == null) {
+                res.send("Error al listar ");
+            } else {
+                var respuesta = swig.renderFile('views/sales/purchased.html',
+                    {
+                        salesList: sales,
+                        user: req.session.usuario
+                    });
+                res.send(respuesta);
+            }
+        });
     });
 
     app.get("/sales/buy/:id", function (req, res) {
