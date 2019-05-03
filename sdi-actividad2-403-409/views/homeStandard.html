@@ -6,6 +6,29 @@
 		<span>{{user.email}}</span>
 		<p id="balance">Dinero actual: {{user.money}} €</p>
 		<h4>Ofertas del usuario</h4>
-		<div th:replace="fragments/salesTable"></div>
+		<div class="table-responsive">
+			<table class="table table-hover" id="tableSales">
+				<thead class="table-dark">
+				<tr class="text-center">
+					<th>Título</th>
+					<th>Precio</th>
+					<th>Propetario</th>
+					<th class="col-md-1"></th>
+					<th class="col-md-1"></th>
+					<th class="col-md-1"></th>
+				</tr>
+				</thead>
+				<tbody class="table-light">
+				{% for sale in salesList %}
+				<tr class="text-center">
+					<td>{{sale.title}}</td>
+					<td>{{sale.details}}</td>
+					<td>{{sale.price}} €</td>
+					<td><a class="deleteSale" href="{{'/sales/delete/' + sale._id.toString()}}">Eliminar</a></td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 {% endblock %}

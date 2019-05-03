@@ -130,10 +130,19 @@ module.exports = function (app, swig, gestorBD) {
         if (req.session.usuario.rol != "rol_estandar") {
             res.redirect(("/homeAdmin?mensaje=No puede acceder a esta zona de la web"));
         } else {
-            var respuesta = swig.renderFile('views/homeStandard.html', {
-                user: req.session.usuario
+            var criterio = {seller: req.session.usuario};
+            gestorBD.obtenerOfertas(criterio, function (sales) {
+                if (sales == null) {
+                    res.send("Error al listar ");
+                } else {
+                    var respuesta = swig.renderFile('views/homeStandard.html',
+                        {
+                            salesList: sales,
+                            user: req.session.usuario
+                        });
+                    res.send(respuesta);
+                }
             });
-            res.send(respuesta);
         }
     });
 
