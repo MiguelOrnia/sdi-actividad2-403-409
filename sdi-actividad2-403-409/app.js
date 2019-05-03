@@ -7,10 +7,10 @@ app.set('rest', rest);
 
 let log4js = require('log4js');
 log4js.configure({
-    appenders: {wallapop: {type: 'file', filename: 'logs/wallapop.log'}},
-    categories: {default: {appenders: ['wallapop'], level: 'trace'}}
+    appenders: {myWallapop: {type: 'file', filename: 'logs/myWallapop.log'}},
+    categories: {default: {appenders: ['myWallapop'], level: 'trace'}}
 });
-let logger = log4js.getLogger('wallapop');
+let logger = log4js.getLogger('myWallapop');
 app.set('logger', logger);
 
 app.use(function (req, res, next) {

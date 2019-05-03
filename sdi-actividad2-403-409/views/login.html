@@ -20,12 +20,14 @@
 					<script>
 						var mensaje = getUrlParameter('mensaje');
 						var tipoMensaje = getUrlParameter('tipoMensaje');
-						if (mensaje != "" && (mensaje.includes("incorrecto"))) {
-							if (tipoMensaje == "") {
-								tipoMensaje = 'alert-danger';
+						if (mensaje != "") {
+							if (mensaje.includes("incorrecto")) {
+								if (tipoMensaje == "") {
+									tipoMensaje = 'alert-danger';
+								}
+								$("#loginError")
+										.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
 							}
-							$("#loginError")
-									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
 						}
 					</script>
 				</div>

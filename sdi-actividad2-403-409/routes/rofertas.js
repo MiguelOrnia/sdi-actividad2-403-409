@@ -4,6 +4,7 @@ module.exports = function (app, swig, gestorBD) {
         var respuesta = swig.renderFile('views/sales/add.html', {
             user: req.session.usuario
         });
+        app.get("logger").info('Usuario se ha dirigido a la vista de añadir oferta');
         res.send(respuesta);
     });
 
@@ -15,12 +16,15 @@ module.exports = function (app, swig, gestorBD) {
                 price: req.body.price,
                 seller: req.session.usuario,
                 buyer: null,
+                fav: req.body.fav,
             }
             // Conectarse
             gestorBD.addSale(sale, function (id) {
                 if (id == null) {
-                    res.send("Error al insertar canción");
+                    res.send("Error al insertar oferta");
+                    res.redirect("/sales/add?mensaje=Error al insertar oferta&tipoMensaje=alert-danger");
                 } else {
+                    app.get("logger").info('Se ha añadido la oferta');
                     res.redirect("/home");
                 }
             });
@@ -49,7 +53,7 @@ module.exports = function (app, swig, gestorBD) {
         var criterio = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
         gestorBD.eliminarOferta(criterio, function (ofertas) {
             if (ofertas == null) {
-                res.send("Could not delete song");
+                res.send("No se puede eliminar la oferta");
             } else {
                 res.redirect("/sales/list");
             }

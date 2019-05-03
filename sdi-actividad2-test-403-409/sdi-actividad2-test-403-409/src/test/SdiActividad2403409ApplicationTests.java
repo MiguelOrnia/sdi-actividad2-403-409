@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.junit.After;
@@ -44,7 +45,7 @@ public class SdiActividad2403409ApplicationTests {
 		WebDriver driver = new FirefoxDriver();
 		return driver;
 	}
-
+	
 	// Antes de cada prueba se navega al URL home de la aplicación
 	@Before
 	public void setUp() {
@@ -60,7 +61,9 @@ public class SdiActividad2403409ApplicationTests {
 
 	// Antes de la primera prueba
 	@BeforeClass
-	static public void begin() {
+	static public void begin() throws ParseException {
+		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
+		javaMongodbInsertData.dataInsertion();
 	}
 
 	// Al finalizar la última prueba
@@ -80,7 +83,7 @@ public class SdiActividad2403409ApplicationTests {
 		PO_HomeView.clickOption(driver, "signup", "class", "underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_",
-				"1234567890", "1234567890");
+				"123456", "123456");
 		// Comprobamos que entramos en la sección privada
 		PO_RegisterView.checkKey(driver, "Bienvenidos a la aplicación");
 	}
@@ -96,17 +99,17 @@ public class SdiActividad2403409ApplicationTests {
 		PO_HomeView.clickOption(driver, "signup", "class", "underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, " ", "test_", "test_", "1234567890",
-				"1234567890");
+				"123456");
 		// Comprobamos el error de email vacío.
 		PO_RegisterView.checkKey(driver, "El email no puede estar vacío");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", " ", "test_",
-				"1234567890", "1234567890");
+				"123456", "123456");
 		// Comprobamos el error de nombre vacío.
 		PO_RegisterView.checkKey(driver, "El nombre no puede estar vacío");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test_", " ",
-				"1234567890", "1234567890");
+				"123456", "123456");
 		// Comprobamos el error de apellidos vacío.
 		PO_RegisterView.checkKey(driver, "El apellido no puede estar vacío");
 		// Rellenamos el formulario.

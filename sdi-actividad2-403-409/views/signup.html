@@ -8,6 +8,20 @@
 
 			<!-- Login Form -->
 			<form method="post" action="/registrarse">
+				<div id="errorUsuario" style="text-align: center">
+					<script src="/js/message.js"></script>
+					<script>
+						var mensaje = getUrlParameter('mensaje');
+						var tipoMensaje = getUrlParameter('tipoMensaje');
+						if (mensaje != "" && mensaje.includes("El correo ya está registrado.")) {
+							if (tipoMensaje == "") {
+								tipoMensaje = 'alert-danger';
+							}
+							$("#errorUsuario")
+									.append("<div class='alert " + tipoMensaje + "'>" + mensaje + " </div>");
+						}
+					</script>
+				</div>
 				<label class="control-label" for="email">Correo electrónico</label>
 				<input type="text" name="email"
 						placeholder="user@email.com" required="true" />
@@ -70,7 +84,7 @@
 					<script>
 						var mensaje = getUrlParameter('mensaje');
 						var tipoMensaje = getUrlParameter('tipoMensaje');
-						if (mensaje != "" && (mensaje.includes("caracteres") || mensaje.includes("vacia"))) {
+						if (mensaje != "" && (mensaje.includes("caracteres") || mensaje.includes("vacía"))) {
 							if (tipoMensaje == "") {
 								tipoMensaje = 'alert-danger';
 							}
@@ -88,7 +102,7 @@
 					<script>
 						var mensaje = getUrlParameter('mensaje');
 						var tipoMensaje = getUrlParameter('tipoMensaje');
-						if (mensaje != "" && (mensaje.includes("coinciden") || mensaje.includes("repita"))) {
+						if (mensaje != "" && (mensaje.includes("coinciden") || mensaje.includes("Repita"))) {
 							if (tipoMensaje == "") {
 								tipoMensaje = 'alert-danger';
 							}

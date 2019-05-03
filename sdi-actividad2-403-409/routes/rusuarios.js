@@ -7,53 +7,60 @@ module.exports = function (app, swig, gestorBD) {
     app.post('/registrarse', function (req, res) {
         if (req.body.email === null || req.body.email === "") {
             res.redirect("/registrarse?mensaje=El email no puede estar vacío");
+            return;
         }
 
         if (req.body.name === null || req.body.name === "") {
             res.redirect("/registrarse?mensaje=El nombre no puede estar vacío");
+            return;
         }
 
         if (req.body.surname === null || req.body.surname === "") {
             res.redirect("/registrarse?mensaje=El apellido no puede estar vacío");
+            return;
         }
 
         if (req.body.password === null || req.body.password === "") {
             res.redirect("/registrarse?mensaje=La contraseña no puede estar vacía");
+            return;
         }
 
-        if (req.body.repassword.length >= 0 && req.body.repassword.length < 8) {
+        if (req.body.repassword === null || req.body.repassword === "") {
             res.redirect("/registrarse?mensaje=Repita la contraseña");
+            return;
         }
 
-        if (req.body.repassword != req.body.password) {
+        if (req.body.repassword !== req.body.password) {
             res.redirect("/registrarse?mensaje=Las contraseñas no coinciden");
+            return;
         } else {
             var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
                 .update(req.body.password).digest('hex');
 
-            var usuario = {
-                email: req.body.email,
-                password: seguro,
-                name: req.body.name,
-                surname: req.body.surname,
-                money: 100,
-                rol: "rol_estandar",
-                active: true
-            }
-
             var criterio = {
-                email: usuario.email
+                email: req.body.email
             }
 
             gestorBD.obtenerUsuarios(criterio, function (usuarios) {
-                if (usuarios != null && usuarios.length != 0) {
+                if (usuarios !== null && usuarios.length !== 0) {
                     res.redirect("/registrarse?mensaje=El correo ya está registrado. Inténtelo de nuevo con un " +
                         "correo diferente");
                 } else {
+                    var usuario = {
+                        email: req.body.email,
+                        password: seguro,
+                        name: req.body.name,
+                        surname: req.body.surname,
+                        money: 100,
+                        rol: "rol_estandar",
+                        active: true
+                    }
                     gestorBD.insertarUsuario(usuario, function (id) {
                         if (id == null) {
+                            app.get("logger").error('Error registro de usuario');
                             res.redirect("/registrarse?mensaje=Error al registrar usuario");
                         } else {
+                            app.get("logger").info('Usuario se ha registrado');
                             res.redirect("/identificarse?mensaje=Nuevo usuario registrado");
                         }
                     })
@@ -68,6 +75,14 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.post("/identificarse", function (req, res) {
+        if (req.body.email === "" || req.body.email === null) {
+            res.redirect("/identificarse?mensaje=El email no puede estar vacío");
+            return;
+        }
+        if (req.body.password === "" || req.body.password === null) {
+            res.redirect("/identificarse?mensaje=La contraseña no puede estar vacía");
+            return;
+        }
         var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
         var criterio = {
@@ -75,10 +90,10 @@ module.exports = function (app, swig, gestorBD) {
             password: seguro
         }
         gestorBD.obtenerUsuarios(criterio, function (usuarios) {
-            if (usuarios == null || usuarios.length == 0) {
+            if (usuarios === undefined || usuarios.length === 0) {
                 req.session.usuario = null;
-                res.redirect("/identificarse" +
-                    "?mensaje=Email o password incorrecto");
+                app.get("logger").error('Fallo en autenticación');
+                res.redirect("/identificarse?mensaje=Email o password incorrecto");
             } else {
                 req.session.usuario = usuarios[0];
                 res.redirect("/home");
@@ -91,8 +106,10 @@ module.exports = function (app, swig, gestorBD) {
         if (user != null) {
             if (user.rol == "rol_admin") {
                 res.redirect("/homeAdmin");
+                app.get("logger").info('Usuario se ha identificado como admin');
             } else {
                 res.redirect("/homeStandard");
+                app.get("logger").info('Usuario estándar se ha identificado');
             }
         } else {
             res.redirect("/identificarse");
@@ -101,7 +118,8 @@ module.exports = function (app, swig, gestorBD) {
 
     app.get('/desconectarse', function (req, res) {
         var respuesta = swig.renderFile('views/login.html', {});
-        req.session.usuario = null;
+        req.session.usuario = undefined;
+        app.get("logger").info('Usuario se ha desconectado');
         res.send(respuesta);
     })
 
@@ -134,15 +152,31 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.get("/user/list", function (req, res) {
-        if (req.session.usuario === null || req.session.usuario.rol != "rol_admin") {
-            res.redirect("/homeStandard?mensaje=No puede acceder a esta zona de la web");
+        let userLogged = req.session.usuario;
+        if (userLogged.rol === 'rol_estandar') {
+            res.redirect("/home?mensaje=No puede acceder a esta zona de la web");
         } else {
-            gestorBD.obtenerUsuarios({}, function (usuarios) {
-                let respuesta = swig.renderFile('views/user/list.html', {
-                    user: req.session.usuario,
-                    usersList: usuarios
-                });
-                res.send(respuesta);
+            let criterio = {
+                email: {
+                    $ne: userLogged.email
+                }
+            };
+            let mysort = (u1, u2) => {
+                return u1.email.localeCompare(u2.email);
+            };
+            gestorBD.obtenerUsuarios(criterio, function (users) {
+                if (users == null) {
+                    res.redirect("/home?mensaje=Error al listar los usuarios");
+                    app.get("logger").error('Error al listar los usuarios');
+                } else {
+                    let respuesta = swig.renderFile('views/user/list.html',
+                        {
+                            users: users.sort(mysort),
+                            user: req.session.user
+                        });
+                    res.send(respuesta);
+                    app.get("logger").info('Administrador se ha dirigido a la vista de usuarios');
+                }
             });
         }
     });
@@ -160,9 +194,11 @@ module.exports = function (app, swig, gestorBD) {
         if (criterio !== undefined) {
             gestorBD.eliminarUsuarios(criterio, criterioEliminar, function (usuarios) {
                 if (usuarios === null || usuarios.length === 0) {
+                    app.get("logger").error('Error al borrar el usuario');
                     res.redirect("/user/list" +
                         "?mensaje=Los usuarios no pudieron ser eliminados");
                 } else {
+                    app.get("logger").info('Usuarios borrados correctamente');
                     res.redirect("/user/list" +
                         "?mensaje=Los usuarios se eliminaron correctamente");
                 }
