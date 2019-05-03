@@ -12,6 +12,20 @@
         </form>
     </section>
     <section>
+
+        {% if error!=null %}
+        <div class="alert alert-danger">
+            <strong>¡Atención!</strong> {{error}} Ha ocurrido un error procesando la compra.
+        </div>
+        {% endif %}
+
+        {% if success!=null %}
+        <div class="alert alert-success">
+            {{success}}
+            La compra se ha realizado correctamente.
+        </div>
+        {% endif %}
+
         <table class="table table-hover">
             <thead class="table-dark">
             <tr>
@@ -33,12 +47,12 @@
                 <td>
                     {% if (sale.seller._id.toString() != user._id.toString()) %}
                         {% if sale.buyer==null %}
-                            <a href="/sales/buy/{{sale._id.toString()}}">Comprar</a>
+                            <a href="/sales/buy/{{sale._id.toString()}}" class="btn btn-success">Comprar</a>
                         {% else %}
                             <span>Vendida</span>
                         {% endif %}
                     {% else %}
-                    <a href="/sales/delete/{{sale._id.toString()}}">Dar de baja</a>
+                    <a href="/sales/delete/{{sale._id.toString()}}" class="btn btn-danger">Dar de baja</a>
                     {% endif %}
                 </td>
             </tr>
