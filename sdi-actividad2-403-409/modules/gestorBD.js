@@ -132,6 +132,7 @@ module.exports = {
         });
     },
     comprarOferta: function (criterio, buyer, funcionCallback) {
+        var buyerId = this.mongo.ObjectID(buyer._id);
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 funcionCallback(null);
@@ -140,25 +141,40 @@ module.exports = {
 
                 collection.find(criterio).limit(1).toArray(function(err, sales){
                     if(err){
+                        db.close();
                         funcionCallback(null);
                     }else{
-                        if(sales[0].seller._id.toString() != buyer._id.toString()){
-                            // Si el comprador no es el vendedor marcamos la oferta como comprada
-                            var compra = {buyer: buyer};
-                            collection.update(criterio, {$set: compra}, function (err, result) {
-                                if (err) {
-                                    funcionCallback(null);
-                                } else {
-                                    funcionCallback(result);
-                                }
+                        if(sales[0].seller._id.toString() != buyer._id.toString() && buyer.money>=sales[0].price){
+                            var usersCollection = db.collection('usuarios');
+                            var criterioUser = { _id: buyerId};
+                            var updatedMoney = {money: buyer.money-sales[0].price};
 
+                            usersCollection.updateOne(criterioUser, {$set: updatedMoney}, function(err, result){
+                               if(err){
+                                   db.close();
+                                   funcionCallback(null);
+                               } else {
+                                   buyer.money = updatedMoney.money;
+                                   // Si el comprador no es el vendedor marcamos la oferta como comprada
+                                   var compra = {buyer: buyer};
+                                   collection.updateOne(criterio, {$set: compra}, function (err, result) {
+                                       if (err) {
+                                           db.close();
+                                           funcionCallback(null);
+                                       } else {
+                                           db.close();
+                                           funcionCallback(result);
+                                       }
+                                   });
+                               }
                             });
                         }else{
+                            db.close();
                             funcionCallback(null);
                         }
                     }
-                    db.close();
-                })
+
+                });
             }
         });
     },
