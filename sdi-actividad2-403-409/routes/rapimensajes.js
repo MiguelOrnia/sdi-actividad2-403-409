@@ -33,7 +33,7 @@ module.exports = function (app, gestorBD) {
         var token = req.headers['token'] || req.body.token || req.query.token;
         app.get('jwt').verify(token, 'secreto', function (err, infoToken) {
             if (err) {
-                app.get("logger").error('Token inválido');
+                app.get("logger").error('API: Token inválido');
                 res.status(403);
                 res.json({
                     acceso: false,
@@ -47,13 +47,13 @@ module.exports = function (app, gestorBD) {
                 }
                 gestorBD.obtenerOfertas(criterio, function (ofertas) {
                     if (ofertas == null || ofertas.length === 0) {
-                        app.get("logger").error('Usuario no autorizado');
+                        app.get("logger").error('API: Usuario no autorizado');
                         res.status(204);
                         res.json({
                             err: "Sin resultados"
                         });
                     } else {
-                        app.get("logger").info('Se han mostrado las ofertas disponibles');
+                        app.get("logger").info('API: Se han mostrado las ofertas disponibles');
                         res.status(200);
                         res.send(ofertas);
                     }
@@ -84,13 +84,13 @@ module.exports = function (app, gestorBD) {
                 gestorBD.insertarMensaje(message, function (mensaje) {
                     if (mensaje == null) {
                         res.status(500);
-                        app.get("logger").info('Se ha producido un error al enviar el mensaje');
+                        app.get("logger").info('API: Se ha producido un error al enviar el mensaje');
                         res.json({
                             err: "Error del servidor"
                         });
                     } else {
                         res.status(200);
-                        app.get("logger").info('El mensaje se ha enviado correctamente');
+                        app.get("logger").info('API: El mensaje se ha enviado correctamente');
                         res.json(mensaje);
                     }
                 })
@@ -103,13 +103,13 @@ module.exports = function (app, gestorBD) {
         gestorBD.obtenerOfertas(criterio, function (ofertas) {
             if (ofertas == null) {
                 res.status(500);
-                app.get("logger").info('Se ha producido un error al obtener ofertas');
+                app.get("logger").info('API: Se ha producido un error al obtener ofertas');
                 res.json({
                     error: "Se ha producido un error"
                 });
             } else if (ofertas.length === 0) {
                 res.status(400);
-                app.get("logger").info('Oferta no encontrada');
+                app.get("logger").info('API: Oferta no encontrada');
                 res.json({
                     error: "Oferta no encontrada"
                 });
@@ -151,7 +151,7 @@ module.exports = function (app, gestorBD) {
                 gestorBD.obtenerMensajes(criterio, function (mensajes) {
                     if (mensajes == null) {
                         res.status(500);
-                        app.get("logger").info('Se ha producido un error al obtener mensajes');
+                        app.get("logger").info('API: Se ha producido un error al obtener mensajes');
                         res.json({
                             error: "Ha habido un error"
                         });
@@ -171,14 +171,14 @@ module.exports = function (app, gestorBD) {
         gestorBD.marcarLeido(criterio, function (mensajes) {
             if (mensajes == null) {
                 res.status(500);
-                app.get("logger").error('Se ha producido un error al leer mensajes');
+                app.get("logger").error('API: Se ha producido un error al leer mensajes');
 
                 res.json({
                     error: "Se ha producido un error"
                 });
             } else {
                 res.status(200);
-                app.get("logger").info('Se ha leído mensaje');
+                app.get("logger").info('API: Se ha leído mensaje');
                 res.send( mensajes);
             }
         })

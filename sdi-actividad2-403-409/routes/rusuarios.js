@@ -61,6 +61,7 @@ module.exports = function (app, swig, gestorBD) {
                             res.redirect("/registrarse?mensaje=Error al registrar usuario");
                         } else {
                             app.get("logger").info('Usuario se ha registrado');
+                            req.session.usuario = usuario;
                             res.redirect("/home");
                         }
                     })
@@ -87,6 +88,7 @@ module.exports = function (app, swig, gestorBD) {
             .update(req.body.password).digest('hex');
         var criterio = {
             email: req.body.username,
+            active : true,
             password: seguro
         }
         gestorBD.obtenerUsuarios(criterio, function (usuarios) {
@@ -170,9 +172,6 @@ module.exports = function (app, swig, gestorBD) {
                     $ne: userLogged.email
                 }
             };
-            let mysort = (u1, u2) => {
-                return u1.email.localeCompare(u2.email);
-            };
             gestorBD.obtenerUsuarios(criterio, function (users) {
                 if (users == null) {
                     res.redirect("/home?mensaje=Error al listar los usuarios");
@@ -180,8 +179,8 @@ module.exports = function (app, swig, gestorBD) {
                 } else {
                     let respuesta = swig.renderFile('views/user/list.html',
                         {
-                            usersList: users.sort(mysort),
-                            usuario: req.session.usuario
+                            usersList: users,
+                            user: req.session.usuario
                         });
                     res.send(respuesta);
                     app.get("logger").info('Administrador se ha dirigido a la vista de usuarios');

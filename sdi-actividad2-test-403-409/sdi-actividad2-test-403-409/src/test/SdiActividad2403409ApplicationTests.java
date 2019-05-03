@@ -49,7 +49,9 @@ public class SdiActividad2403409ApplicationTests {
 	
 	// Antes de cada prueba se navega al URL home de la aplicación
 	@Before
-	public void setUp() {
+	public void setUp() throws ParseException{
+		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
+		javaMongodbInsertData.dataInsertion();
 		driver.navigate().to(URL);
 	}
 
@@ -61,11 +63,11 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	// Antes de la primera prueba
-	@BeforeClass
-	static public void begin() throws ParseException {
-		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
-		javaMongodbInsertData.dataInsertion();
-	}
+//	@BeforeClass
+//	static public void begin() throws ParseException {
+//		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
+//		javaMongodbInsertData.dataInsertion();
+//	}
 
 	// Al finalizar la última prueba
 	@AfterClass
@@ -315,7 +317,7 @@ public class SdiActividad2403409ApplicationTests {
 		PO_AddSale.goToPage(driver);
 		// Rellenar
 		PO_AddSale.addSale(driver, "Test", "Oferta para testear", 100.0);
-		// Comprobar que ha sido aÃ±adida
+		// Comprobar que ha sido añadida
 		PO_MySales.goToPage(driver);
 		PO_MySales.checkElement(driver, "text", "Test");
 		PO_MySales.checkElement(driver, "text", "Oferta para testear");
@@ -428,7 +430,7 @@ public class SdiActividad2403409ApplicationTests {
 		SeleniumUtils.textoPresentePagina(driver, "Raton");
 		SeleniumUtils.textoPresentePagina(driver, "Joya");
 		SeleniumUtils.textoPresentePagina(driver, "Gafas");
-		SeleniumUtils.textoPresentePagina(driver, "CaÃ±a de Pescar");
+		SeleniumUtils.textoPresentePagina(driver, "Caña de Pescar");
 	}
 
 	/**

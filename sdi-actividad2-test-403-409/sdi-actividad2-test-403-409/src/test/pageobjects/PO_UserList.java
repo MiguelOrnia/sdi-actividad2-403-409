@@ -23,7 +23,7 @@ public class PO_UserList extends PO_View {
 				"checkBox");
 		for (int i : indexes)
 			checkboxes.get(i).click();
-		List<WebElement> btnDelete = PO_View.checkElement(driver, "id",
+		List<WebElement> btnDelete = PO_View.checkElement(driver, "class",
 				"delete");
 		btnDelete.get(0).click();
 	}
