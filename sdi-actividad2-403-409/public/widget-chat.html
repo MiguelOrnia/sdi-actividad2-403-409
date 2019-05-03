@@ -1,0 +1,29 @@
+<div class="bodyWrapper">
+    <div class="currentChat">
+        <div class="currentChatHeader">
+            <div class="currentChatImageWrapper">
+                <img src="/img/contact.svg" alt="" class="currentChatImage">
+            </div>
+            <div class="currentChatHeaderTitle">
+                <h3 th:text="${convTitle==null ? 'Chat' : convTitle}">Chat title</h3>
+            </div>
+        </div>
+        <div class="currentChatContent">
+
+            <div th:each="message : ${messages}" class="message"
+                 th:classappend="${message.sender.equals(activeUser)} ? sent : received ">
+                <div class="messageContent" th:text="${message.body}">Lorem, ipsum dolor sit amet
+                </div>
+                <div class="messageTime" th:text="${message.date.toString('dd/MM/yyy HH:mm')}"></div>
+            </div>
+
+
+        </div>
+        <form action="/messages" method="post" class="currentChatInput">
+            <input type="text" name="body" id="inputMessage"> <input
+                type="submit" value="↩︎" id="submitMessage">
+        </form>
+
+    </div>
+
+</div>
