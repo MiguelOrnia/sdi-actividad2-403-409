@@ -61,7 +61,7 @@ module.exports = function (app, swig, gestorBD) {
                             res.redirect("/registrarse?mensaje=Error al registrar usuario");
                         } else {
                             app.get("logger").info('Usuario se ha registrado');
-                            res.redirect("/identificarse?mensaje=Nuevo usuario registrado");
+                            res.redirect("/home");
                         }
                     })
                 }
@@ -150,7 +150,7 @@ module.exports = function (app, swig, gestorBD) {
         if (req.session.usuario === null) {
             res.redirect("/identificarse");
         }
-        if (req.session.usuario.rol != "rol_admin") {
+        if (req.session.usuario.rol !== "rol_admin") {
             res.redirect(("/homeStandard?mensaje=No puede acceder a esta zona de la web"))
         } else {
             var respuesta = swig.renderFile('views/homeAdmin.html', {
@@ -180,8 +180,8 @@ module.exports = function (app, swig, gestorBD) {
                 } else {
                     let respuesta = swig.renderFile('views/user/list.html',
                         {
-                            users: users.sort(mysort),
-                            user: req.session.user
+                            usersList: users.sort(mysort),
+                            usuario: req.session.usuario
                         });
                     res.send(respuesta);
                     app.get("logger").info('Administrador se ha dirigido a la vista de usuarios');

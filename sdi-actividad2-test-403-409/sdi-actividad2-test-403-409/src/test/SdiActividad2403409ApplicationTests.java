@@ -31,10 +31,11 @@ import test.utils.SeleniumUtils;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SdiActividad2403409ApplicationTests {
-
-	final static String PathFirefox64 = "../FirefoxPortable/FirefoxPortable.exe";
-
-	final static String Geckdriver024 = "geckodriver024win64.exe";
+	
+	// Path Miguel
+	static String PathFirefox64 = "../../FirefoxPortable/FirefoxPortable.exe";
+	static String Geckdriver024 = "C:\\Users\\Miguel\\Desktop\\"
+			+ "PL-SDI-Sesion5-material\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox64, Geckdriver024);
 	static String URL = "http://localhost:8081";
@@ -80,7 +81,7 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR01() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "signup", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_",
 				"123456", "123456");
@@ -96,7 +97,7 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR02() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "signup", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, " ", "test_", "test_", "1234567890",
 				"123456");
@@ -127,7 +128,7 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR03() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "signup", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test", "test",
 				"1234567890", "1234578901");
