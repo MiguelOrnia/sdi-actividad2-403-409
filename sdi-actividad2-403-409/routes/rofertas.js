@@ -62,10 +62,10 @@ module.exports = function (app, swig, gestorBD) {
 
 
     app.get("/sales/search", function (req, res) {
-        var criterio = { buyer: null};
+        var criterio = {};
 
         if (req.query.searchText != null) {
-            criterio = {"title": {$regex: ".*" + req.query.searchText + ".*", $options: 'i'}, "isSold" : false};
+            criterio = {"title": {$regex: ".*" + req.query.searchText + ".*", $options: 'i'}};
         }
 
         var pg = parseInt(req.query.pg); // Es String !!!
