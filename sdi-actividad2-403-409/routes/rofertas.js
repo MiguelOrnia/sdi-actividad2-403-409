@@ -62,10 +62,10 @@ module.exports = function (app, swig, gestorBD) {
 
 
     app.get("/sales/search", function (req, res) {
-        var criterio = { buyer: null};
+        var criterio = {};
 
         if (req.query.searchText != null) {
-            criterio = {"title": {$regex: ".*" + req.query.searchText + ".*", $options: 'i'}, "isSold" : false};
+            criterio = {"title": {$regex: ".*" + req.query.searchText + ".*", $options: 'i'}};
         }
 
         var pg = parseInt(req.query.pg); // Es String !!!
@@ -87,12 +87,25 @@ module.exports = function (app, swig, gestorBD) {
                         paginas.push(i);
                     }
                 }
+
+                var success = null;
+                var error = null;
+
+                if( req.query.success != null ) {
+                    success = req.query.success;
+                }
+                if( req.query.error != null ) {
+                    error = req.query.error;
+                }
+
                 var respuesta = swig.renderFile('views/sales/search.html',
                     {
                         sales: ofertas,
                         paginas: paginas,
                         actual: pg,
-                        user: req.session.usuario
+                        user: req.session.usuario,
+                        success: success,
+                        error: error
                     });
                 res.send(respuesta);
             }
@@ -124,9 +137,9 @@ module.exports = function (app, swig, gestorBD) {
 
         gestorBD.comprarOferta(criterio, buyer, function(result){
             if(result==null){
-                res.send("Error al comprar oferta: "+id);
+                res.redirect("/sales/search/?error=Ha+ocurrido+un+error+procesando+la+oferta");
             }else{
-                res.redirect("/sales/search");
+                res.redirect("/sales/search/?success=La+oferta+se+ha+realizado+correctamente");
             }
         });
     });

@@ -1,60 +1,77 @@
 {% extends "../templates/base.html" %}
 {% block cuerpo %}
 <div class="container">
-<h2>Listado de ofertas completo</h2>
-        <section style="margin-bottom: 20px">
-            <form class="navbar-form" method="get" action="/sales/search">
-                <div class="form-group">
-                    <input name="searchText" type="text" class="form-control" size="50"
-                          placeholder="Buscar"/>
-                </div>
-                <button id="search" type="submit" class="btn btn-primary">Buscar</button>
-            </form>
-        </section>
-        <section>
-            <table class="table table-hover">
-                <thead class="table-dark">
-                <tr>
-                    <th scope="col">Titulo</th>
-                    <th scope="col">Detalles</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
+    <h2>Listado de ofertas completo</h2>
+    <section style="margin-bottom: 20px">
+        <form class="navbar-form" method="get" action="/sales/search">
+            <div class="form-group">
+                <input name="searchText" type="text" class="form-control" size="50"
+                       placeholder="Buscar"/>
+            </div>
+            <button id="search" type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </section>
+    <section>
 
-                {% for sale in sales %}
-                <tr class="table-light">
-                    <td>{{sale.title}}</td>
-                    <td>{{sale.details}}</td>
-                    <td>{{sale.price}}</td>
-                    <td></td>
-                    <td>
-                        {% if (sale.seller._id.toString() != user._id.toString()) %}
-                        <a href="/sales/buy/{{sale._id.toString()}}">Comprar</a>
-                        {% endif %}
-                        {% if (sale.seller._id.toString() == user._id.toString()) %}
-                        <a href="/sales/delete/{{sale._id.toString()}}">Dar de baja</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
+        {% if error!=null %}
+        <div class="alert alert-danger">
+            <strong>¡Atención!</strong> {{error}} Ha ocurrido un error procesando la compra.
+        </div>
+        {% endif %}
 
-                </tbody>
-            </table>
-        </section>
+        {% if success!=null %}
+        <div class="alert alert-success">
+            {{success}}
+            La compra se ha realizado correctamente.
+        </div>
+        {% endif %}
+
+        <table class="table table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Titulo</th>
+                <th scope="col">Detalles</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for sale in sales %}
+            <tr class="table-light">
+                <td>{{sale.title}}</td>
+                <td>{{sale.details}}</td>
+                <td>{{sale.price}}</td>
+                <td></td>
+                <td>
+                    {% if (sale.seller._id.toString() != user._id.toString()) %}
+                        {% if sale.buyer==null %}
+                            <a href="/sales/buy/{{sale._id.toString()}}" class="btn btn-success">Comprar</a>
+                        {% else %}
+                            <span>Vendida</span>
+                        {% endif %}
+                    {% else %}
+                    <a href="/sales/delete/{{sale._id.toString()}}" class="btn btn-danger">Dar de baja</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </section>
 
     <!--Paginaciónmostrarlaactual y 2 anterioresy dossiguientes-->
     <div class="row text-center">
         <ul class="pagination">
             {% for pagina in paginas %}
             <li class="page-item" id="pi-{{ pagina}}">
-                <a class="page-link" href="/sales/search/?pg={{ pagina }}" >{{ pagina }}</a>
+                <a class="page-link" href="/sales/search/?pg={{ pagina }}">{{ pagina }}</a>
             </li>
             {% endfor %}
             <script>
-                $( "#pi-{{ actual}}" ).addClass("active");
+                $("#pi-{{ actual}}").addClass("active");
             </script>
 
         </ul>
