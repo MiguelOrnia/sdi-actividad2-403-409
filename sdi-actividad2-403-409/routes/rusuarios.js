@@ -75,12 +75,8 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.get("/identificarse", function (req, res) {
-        if (req.session.usuario === undefined) {
-            var respuesta = swig.renderFile('views/login.html', {});
-            res.send(respuesta);
-        } else {
-            res.redirect("/home");
-        }
+        var respuesta = swig.renderFile('views/login.html', {});
+        res.send(respuesta);
     });
 
     app.post("/identificarse", function (req, res) {
