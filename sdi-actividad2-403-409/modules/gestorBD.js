@@ -139,36 +139,36 @@ module.exports = {
             } else {
                 var collection = db.collection('sales');
 
-                collection.find(criterio).limit(1).toArray(function(err, sales){
-                    if(err){
+                collection.find(criterio).limit(1).toArray(function (err, sales) {
+                    if (err) {
                         db.close();
                         funcionCallback(null);
-                    }else{
-                        if(sales[0].seller._id.toString() != buyer._id.toString() && buyer.money>=sales[0].price){
+                    } else {
+                        if (sales[0].seller._id.toString() != buyer._id.toString() && buyer.money >= sales[0].price) {
                             var usersCollection = db.collection('usuarios');
-                            var criterioUser = { _id: buyerId};
-                            var updatedMoney = {money: buyer.money-sales[0].price};
+                            var criterioUser = {_id: buyerId};
+                            var updatedMoney = {money: buyer.money - sales[0].price};
 
-                            usersCollection.updateOne(criterioUser, {$set: updatedMoney}, function(err, result){
-                               if(err){
-                                   db.close();
-                                   funcionCallback(null);
-                               } else {
-                                   buyer.money = updatedMoney.money;
-                                   // Si el comprador no es el vendedor marcamos la oferta como comprada
-                                   var compra = {buyer: buyer};
-                                   collection.updateOne(criterio, {$set: compra}, function (err, result) {
-                                       if (err) {
-                                           db.close();
-                                           funcionCallback(null);
-                                       } else {
-                                           db.close();
-                                           funcionCallback(result);
-                                       }
-                                   });
-                               }
+                            usersCollection.updateOne(criterioUser, {$set: updatedMoney}, function (err, result) {
+                                if (err) {
+                                    db.close();
+                                    funcionCallback(null);
+                                } else {
+                                    buyer.money = updatedMoney.money;
+                                    // Si el comprador no es el vendedor marcamos la oferta como comprada
+                                    var compra = {buyer: buyer};
+                                    collection.updateOne(criterio, {$set: compra}, function (err, result) {
+                                        if (err) {
+                                            db.close();
+                                            funcionCallback(null);
+                                        } else {
+                                            db.close();
+                                            funcionCallback(result);
+                                        }
+                                    });
+                                }
                             });
-                        }else{
+                        } else {
                             db.close();
                             funcionCallback(null);
                         }
@@ -228,6 +228,62 @@ module.exports = {
                 });
             }
             db.close();
+        });
+    },
+    findConversation: function (criterio, funcionCallback) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                var collection = db.collection('conversations');
+                collection.find(criterio).toArray(function (err, conversations) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(conversations);
+                    }
+                    db.close();
+                });
+            }
+        });
+    },
+    createConversation: function (sale, usuario, funcionCallback) {
+        var conversation = {sale: sale, user: usuario, messages: []};
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                let collection = db.collection('conversations');
+                collection.insert(conversation, function (err, result) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(result.ops[0]);
+                    }
+                    db.close();
+                });
+            }
+        });
+    },
+    insertMessage: function (conversation, message, funcionCallback) {
+        var criterio = {_id: conversation._id};
+        var m = conversation.messages;
+        m.push(message);
+        var updatedMessages = {messages: m};
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                funcionCallback(null);
+            } else {
+                let collection = db.collection('conversations');
+                collection.updateOne(criterio, {$set: updatedMessages},function (err, result) {
+                    if (err) {
+                        funcionCallback(null);
+                    } else {
+                        funcionCallback(result);
+                    }
+                    db.close();
+                });
+            }
         });
     }
 };

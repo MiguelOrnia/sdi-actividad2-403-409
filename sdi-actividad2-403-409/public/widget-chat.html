@@ -10,12 +10,6 @@
         </div>
         <div class="currentChatContent">
 
-            <div class="message received ">
-                <div class="messageContent">Lorem, ipsum dolor sit amet
-                </div>
-                <div class="messageTime"></div>
-            </div>
-
         </div>
         <form  class="currentChatInput">
             <input type="text" name="message" id="inputMessage"> <input
@@ -39,9 +33,10 @@
             dataType: 'json',
             headers: {"token": token},
             success: function (respuesta) {
-                mensajes = respuesta;
-                console.log(mensajes);
-                actualizarMensajes(mensajes);
+                var convID = respuesta.conversation._id;
+                window.history.pushState("", "", "/mensajes.html?w="+convID);
+                conversation = respuesta.conversation;
+                actualizarMensajes(conversation);
             },
             error: function (error) {
                 if (error.status == 500) {
@@ -56,14 +51,14 @@
         var mensaje = $("#inputMessage").val();
         var urlAjax = URLbase + "/sales/message/";
         var url = new URL(window.location.href);
-        var saleID = url.searchParams.get("w");
-        console.log("vamos a enviar: "+mensaje)
+        var convID = url.searchParams.get("w");
+        console.log("vamos a enviar: "+mensaje);
         $.ajax({
             url: urlAjax,
             type: "POST",
             data: {
                 message: mensaje,
-                id: saleID
+                id: convID
             },
             dataType: 'json',
             headers: {token: token},
@@ -76,10 +71,12 @@
         });
     }
 
-    function actualizarMensajes(mensajes) {
+    function actualizarMensajes(conversation) {
+        var mensajes = conversation.messages;
         $("#currentChatContent").empty(); // Vaciar la tabla
         for (i = 0; i < mensajes.length; i++) {
-            $("#currentChatContent").append(
+            console.log(mensajes[i]);
+            $(".currentChatContent").append(
                 "<div class='message sent'>" +
                 "<div class='messageContent'>" + mensajes[i].message +
                 "</div>" +
@@ -87,7 +84,7 @@
                 "</div>"
             );
         }
-        $("#currentChatHeaderTitleH3").html(mensajes[0].offer.title);
+        $("#currentChatHeaderTitleH3").html(conversation.sale.title);
     }
 
     cargarMensajes();

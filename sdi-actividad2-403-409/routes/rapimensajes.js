@@ -62,121 +62,6 @@ module.exports = function (app, gestorBD) {
         })
     });
 
-    app.post('/api/sales/message/', function (req, res) {
-        let criterio = {"_id": gestorBD.mongo.ObjectID(req.body.id)};
-        var token = req.headers['token'] || req.body.token || req.query.token;
-        app.get('jwt').verify(token, 'secreto', function (err, infoToken) {
-            if (err) {
-                app.get("logger").error('API: Token inválido');
-                res.status(403);
-                res.json({
-                    acceso: false,
-                    error: 'Token inválido o caducado'
-                });
-            } else {
-                gestorBD.obtenerOfertas(criterio, function (ofertas) {
-                    if (ofertas == null || ofertas.length === 0) {
-                        res.status(403);
-                        res.json({
-                            err: "Sin resultados"
-                        });
-                    } else {
-                        let usuario = infoToken.usuario;
-                        let oferta = ofertas[0];
-                        let message = {
-                            sender: usuario,
-                            receiver: oferta.seller,
-                            offer: oferta,
-                            message: req.body.message,
-                            date: new Date(),
-                            read: false
-                        };
-                        gestorBD.insertarMensaje(message, function (mensaje) {
-                            if (mensaje == null) {
-                                res.status(500);
-                                app.get("logger").info('API: Se ha producido un error al enviar el mensaje');
-                                res.json({
-                                    err: "Error del servidor"
-                                });
-                            } else {
-                                res.status(200);
-                                app.get("logger").info('API: El mensaje se ha enviado correctamente');
-                                res.json(mensaje);
-                            }
-                        })
-                    }
-                });
-            }
-        });
-    });
-
-    app.get("/api/sales/conversation/:id", function (req, res) {
-        var saleID = gestorBD.mongo.ObjectID(req.params.id);
-        let criterio = {_id: saleID};
-        gestorBD.obtenerOfertas(criterio, function (ofertas) {
-            if (ofertas == null) {
-                res.status(500);
-                app.get("logger").info('API: Se ha producido un error al obtener ofertas');
-                res.json({
-                    error: "Se ha producido un error"
-                });
-            } else if (ofertas.length === 0) {
-                res.status(400);
-                app.get("logger").info('API: Oferta no encontrada');
-                res.json({
-                    error: "Oferta no encontrada"
-                });
-            } else {
-                let offer = ofertas[0];
-                let owner = offer.owner;
-                let user = res.usuario;
-                let criterio = {
-                    $or: [
-                        {
-                            $and: [
-                                {
-                                    sender: user
-                                },
-                                {
-                                    receiver: owner
-                                },
-                                {
-                                    offer: offer
-                                }
-                            ]
-                        },
-                        {
-                            $and: [
-                                {
-                                    sender: owner
-                                },
-                                {
-                                    receiver: user
-                                },
-
-                                {
-                                    offer: offer
-                                }
-                            ]
-                        }
-                    ]
-                };
-                gestorBD.obtenerMensajes(criterio, function (mensajes) {
-                    if (mensajes == null) {
-                        res.status(500);
-                        app.get("logger").info('API: Se ha producido un error al obtener mensajes');
-                        res.json({
-                            error: "Ha habido un error"
-                        });
-                    } else {
-                        res.status(200);
-                        res.send(JSON.stringify(mensajes));
-                    }
-                });
-            }
-        });
-    });
-
     app.get("/api/message/leido/:id", function (req, res) {
         let criterio = {
             "_id": gestorBD.mongo.ObjectID(req.params.id)
@@ -195,5 +80,100 @@ module.exports = function (app, gestorBD) {
                 res.send(mensajes);
             }
         })
+    });
+
+
+    app.get('/api/sales/conversation/:id', function (req, res) {
+        var token = req.headers['token'] || req.body.token || req.query.token;
+        var saleID = req.params.id;
+
+        app.get('jwt').verify(token, 'secreto', function (err, infoToken) {
+            if (err) {
+                res.status(403); // Forbidden
+                res.json({
+                    acceso: false,
+                    error: 'Token invalido o caducado'
+                });
+            } else {
+                var usuario = infoToken.usuario;
+                var criterioOferta = {_id: gestorBD.mongo.ObjectID(saleID)};
+
+                gestorBD.obtenerOfertas(criterioOferta, function (ofertas) {
+                    if (ofertas == null || ofertas[0] == null) {
+                        res.status(404);
+                        res.json({
+                            err: 'Ha ocurrido un error con la base de datos'
+                        });
+                    } else {
+                        var criterioConversation = {sale: ofertas[0], user: usuario};
+                        gestorBD.findConversation(criterioConversation, function (conversations) {
+                            if (conversations == null) {
+                                res.status(404);
+                                res.json({
+                                    err: 'Ha ocurrido un error con la base de datos'
+                                });
+                            } else {
+                                if (conversations.length == 0) {
+                                    gestorBD.createConversation(ofertas[0], usuario, function (result) {
+                                        if (result == null) {
+                                            res.status(404);
+                                            res.json({
+                                                err: 'Ha ocurrido un error con la base de datos'
+                                            });
+                                        } else {
+                                            //SUCCESS RETURN CONVERSATION
+                                            res.status(200);
+                                            res.json({conversation: result});
+                                        }
+                                    });
+                                } else {
+                                    //SUCCESS RETURN CONVERSATION
+                                    res.status(200);
+                                    res.json({conversation: conversations[0]});
+                                }
+
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    app.post('/api/sales/message/', function (req, res) {
+        let criterio = {"_id": gestorBD.mongo.ObjectID(req.body.id)};
+        var token = req.headers['token'] || req.body.token || req.query.token;
+        app.get('jwt').verify(token, 'secreto', function (err, infoToken) {
+            if (err) {
+                app.get("logger").error('API: Token inválido');
+                res.status(403);
+                res.json({
+                    acceso: false,
+                    error: 'Token inválido o caducado'
+                });
+            } else {
+                gestorBD.findConversation(criterio, function (conversations) {
+                    if (conversations == null || conversations.length === 0) {
+                        res.status(403);
+                        res.json({
+                            err: "Sin resultados"
+                        });
+                    } else {
+                        var message = {sender: infoToken.usuario, message: req.body.message, date: new Date()};
+                        gestorBD.insertMessage(conversations[0], message, function (result) {
+                            if(result==null){
+                                res.status(403);
+                                res.json({
+                                    err: "Sin resultados"
+                                });
+                            }else{
+                                //SUCCESS
+                                let hola = 1;
+                            }
+                        })
+                    }
+                });
+            }
+        });
     });
 };
