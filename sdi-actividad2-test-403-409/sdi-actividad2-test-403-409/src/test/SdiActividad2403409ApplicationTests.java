@@ -511,6 +511,7 @@ public class SdiActividad2403409ApplicationTests {
 		PO_SearchView.searchForSale(driver, "Vendo Cosa Random 2");
 		// Comprar la oferta
 		PO_SearchView.buySale(driver, "Vendo Cosa Random 2");
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "form-group", 2);
 		// Comprobar balance
 		PO_HomeView.goToPage(driver);
 		double balance = PO_HomeView.getUserBalance(driver);
@@ -533,7 +534,8 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprar la oferta
 		PO_SearchView.buySale(driver, "Consola");
 		// Comprobar mensaje
-		PO_SearchView.checkKey(driver, "¡Atención! Ha ocurrido un error procesando la oferta");
+		assertEquals(PO_SearchView.getMessageError(driver), 
+				"¡Atención! Ha ocurrido un error procesando la oferta");
 	}
 
 	/**
