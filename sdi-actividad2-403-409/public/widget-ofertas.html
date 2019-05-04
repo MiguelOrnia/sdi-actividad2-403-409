@@ -46,13 +46,15 @@
                 "<td>" + ofertasMostrar[i].title + "</td>" +
                 "<td>" + ofertasMostrar[i].description + "</td>" +
                 "<td>" + ofertasMostrar[i].price + "</td>" +
-                "<td><a class='btn btn-info' href='" + URLbase + "/sales/message/" + ofertasMostrar[i]._id + "'>Mensaje</a></td>" +
+                "<td><a class='btn btn-info' onclick=widgetMensajes('" + ofertasMostrar[i]._id + "')>Mensaje</a></td>" +
                 "</tr>");
         }
     }
 
-    function widgetOfertas() {
-        $("#contenedor-principal").load("widget-ofertas.html");
+    function widgetMensajes(saleID) {
+        console.log("mensajes"+saleID);
+        window.history.pushState("", "", "/mensajes.html?w="+saleID);
+        $("#contenedor-principal").load("widget-chat.html");
     }
 
     cargarOfertas();

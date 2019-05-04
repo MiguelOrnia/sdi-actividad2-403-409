@@ -17,7 +17,7 @@ module.exports = function (app, gestorBD) {
             } else {
                 var token = app.get('jwt').sign(
                     {
-                        usuario: criterio.email,
+                        usuario: usuarios[0],
                         tiempo: Date.now() / 1000
                     }, "secreto");
                 res.status(200);
@@ -62,44 +62,57 @@ module.exports = function (app, gestorBD) {
         })
     });
 
-    app.post('/api/sales/message/:id', function (req, res) {
-        let criterio = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
-        gestorBD.obtenerOfertas(criterio, function (ofertas) {
-            if (ofertas == null || ofertas.length === 0) {
+    app.post('/api/sales/message/', function (req, res) {
+        let criterio = {"_id": gestorBD.mongo.ObjectID(req.body.id)};
+        var token = req.headers['token'] || req.body.token || req.query.token;
+        app.get('jwt').verify(token, 'secreto', function (err, infoToken) {
+            if (err) {
+                app.get("logger").error('API: Token inválido');
                 res.status(403);
                 res.json({
-                    err: "Sin resultados"
+                    acceso: false,
+                    error: 'Token inválido o caducado'
                 });
             } else {
-                let usuario = res.usuario;
-                let oferta = ofertas[0];
-                let message = {
-                    sender: usuario,
-                    receiver: req.body.receiver,
-                    offer: gestorBD.mongo.ObjectID(req.params.id),
-                    message: req.body.message,
-                    date: new Date(),
-                    read: false
-                };
-                gestorBD.insertarMensaje(message, function (mensaje) {
-                    if (mensaje == null) {
-                        res.status(500);
-                        app.get("logger").info('API: Se ha producido un error al enviar el mensaje');
+                gestorBD.obtenerOfertas(criterio, function (ofertas) {
+                    if (ofertas == null || ofertas.length === 0) {
+                        res.status(403);
                         res.json({
-                            err: "Error del servidor"
+                            err: "Sin resultados"
                         });
                     } else {
-                        res.status(200);
-                        app.get("logger").info('API: El mensaje se ha enviado correctamente');
-                        res.json(mensaje);
+                        let usuario = infoToken.usuario;
+                        let oferta = ofertas[0];
+                        let message = {
+                            sender: usuario,
+                            receiver: oferta.seller,
+                            offer: oferta,
+                            message: req.body.message,
+                            date: new Date(),
+                            read: false
+                        };
+                        gestorBD.insertarMensaje(message, function (mensaje) {
+                            if (mensaje == null) {
+                                res.status(500);
+                                app.get("logger").info('API: Se ha producido un error al enviar el mensaje');
+                                res.json({
+                                    err: "Error del servidor"
+                                });
+                            } else {
+                                res.status(200);
+                                app.get("logger").info('API: El mensaje se ha enviado correctamente');
+                                res.json(mensaje);
+                            }
+                        })
                     }
-                })
+                });
             }
         });
     });
 
     app.get("/api/sales/conversation/:id", function (req, res) {
-        let criterio = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
+        var saleID = gestorBD.mongo.ObjectID(req.params.id);
+        let criterio = {_id: saleID};
         gestorBD.obtenerOfertas(criterio, function (ofertas) {
             if (ofertas == null) {
                 res.status(500);
@@ -179,7 +192,7 @@ module.exports = function (app, gestorBD) {
             } else {
                 res.status(200);
                 app.get("logger").info('API: Se ha leído mensaje');
-                res.send( mensajes);
+                res.send(mensajes);
             }
         })
     });

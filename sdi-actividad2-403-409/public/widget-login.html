@@ -34,7 +34,7 @@
                 console.log(respuesta.token);
                 token = respuesta.token;
                 Cookies.set('token', respuesta.token);
-                console.log("loguiao"+respuesta.token);
+                console.log("loguiao"+respuesta.token.usuario);
                 $( "#contenedor-principal" ).load( "widget-ofertas.html");
             },
             error : function (error){

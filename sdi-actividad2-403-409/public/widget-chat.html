@@ -5,25 +5,91 @@
                 <img src="/img/contact.svg" alt="" class="currentChatImage">
             </div>
             <div class="currentChatHeaderTitle">
-                <h3 th:text="${convTitle==null ? 'Chat' : convTitle}">Chat title</h3>
+                <h3 id="currentChatHeaderTitleH3">Titulo</h3>
             </div>
         </div>
         <div class="currentChatContent">
 
-            <div th:each="message : ${messages}" class="message"
-                 th:classappend="${message.sender.equals(activeUser)} ? sent : received ">
-                <div class="messageContent" th:text="${message.body}">Lorem, ipsum dolor sit amet
+            <div class="message received ">
+                <div class="messageContent">Lorem, ipsum dolor sit amet
                 </div>
-                <div class="messageTime" th:text="${message.date.toString('dd/MM/yyy HH:mm')}"></div>
+                <div class="messageTime"></div>
             </div>
 
-
         </div>
-        <form action="/messages" method="post" class="currentChatInput">
-            <input type="text" name="body" id="inputMessage"> <input
-                type="submit" value="↩︎" id="submitMessage">
+        <form  class="currentChatInput">
+            <input type="text" name="message" id="inputMessage"> <input
+                type="button" value="↩︎" onclick="sendMessage()" id="submitMessage">
         </form>
-
     </div>
-
 </div>
+
+<script>
+    var mensajes;
+
+    function cargarMensajes() {
+        var url = new URL(window.location.href);
+        var saleID = url.searchParams.get("w");
+        console.log("cargando mensajes para " + saleID);
+        var urlAjax = URLbase + "/sales/conversation/" + saleID;
+        $.ajax({
+            url: urlAjax,
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (respuesta) {
+                mensajes = respuesta;
+                console.log(mensajes);
+                actualizarMensajes(mensajes);
+            },
+            error: function (error) {
+                if (error.status == 500) {
+                    console.log(error);
+                    $("#contenedor-principal").load("widget-login.html");
+                }
+            }
+        });
+    }
+
+    function sendMessage() {
+        var mensaje = $("#inputMessage").val();
+        var urlAjax = URLbase + "/sales/message/";
+        var url = new URL(window.location.href);
+        var saleID = url.searchParams.get("w");
+        console.log("vamos a enviar: "+mensaje)
+        $.ajax({
+            url: urlAjax,
+            type: "POST",
+            data: {
+                message: mensaje,
+                id: saleID
+            },
+            dataType: 'json',
+            headers: {token: token},
+            success: function (respuesta) {
+                actualizarMensajes();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function actualizarMensajes(mensajes) {
+        $("#currentChatContent").empty(); // Vaciar la tabla
+        for (i = 0; i < mensajes.length; i++) {
+            $("#currentChatContent").append(
+                "<div class='message sent'>" +
+                "<div class='messageContent'>" + mensajes[i].message +
+                "</div>" +
+                "<div class='messageTime'>" + mensajes[i].date.toString() + "</div>" +
+                "</div>"
+            );
+        }
+        $("#currentChatHeaderTitleH3").html(mensajes[0].offer.title);
+    }
+
+    cargarMensajes();
+
+</script>

@@ -15,14 +15,13 @@
 
         {% if error!=null %}
         <div class="alert alert-danger">
-            <strong>¡Atención!</strong> {{error}} Ha ocurrido un error procesando la compra.
+            <strong>¡Atención!</strong> {{error}}
         </div>
         {% endif %}
 
         {% if success!=null %}
         <div class="alert alert-success">
             {{success}}
-            La compra se ha realizado correctamente.
         </div>
         {% endif %}
 
