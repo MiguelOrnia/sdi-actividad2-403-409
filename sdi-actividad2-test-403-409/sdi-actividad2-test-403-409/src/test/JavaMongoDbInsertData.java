@@ -155,7 +155,6 @@ public class JavaMongoDbInsertData {
 					.append("title", "Caña de Pescar")
 					.append("details", "Vendo caña de pescar 9000")
 					.append("price", 50)
-					.append("buyer", user1)
 					.append("seller", user4));
 			col.insertOne(new Document()
 					.append("title", "Vendo Ford Fiesta")

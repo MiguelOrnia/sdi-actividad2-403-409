@@ -545,6 +545,6 @@ public class SdiActividad2403409ApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "miguel@email.com", "password");
 		PO_BoughtView.goToPage(driver);
-		assertEquals(2, PO_BoughtView.checkNumberOfItems(driver));
+		assertEquals(1, PO_BoughtView.checkNumberOfItems(driver));
 	}
 }
