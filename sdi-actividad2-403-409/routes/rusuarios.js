@@ -1,7 +1,11 @@
 module.exports = function (app, swig, gestorBD) {
     app.get("/registrarse", function (req, res) {
-        var respuesta = swig.renderFile('views/signup.html', {});
-        res.send(respuesta);
+        if (req.session.usuario === undefined) {
+            var respuesta = swig.renderFile('views/signup.html', {});
+            res.send(respuesta);
+        } else {
+            res.redirect("/home");
+        }
     });
 
     app.post('/registrarse', function (req, res) {
@@ -71,8 +75,12 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.get("/identificarse", function (req, res) {
-        var respuesta = swig.renderFile('views/login.html', {});
-        res.send(respuesta);
+        if (req.session.usuario === undefined) {
+            var respuesta = swig.renderFile('views/login.html', {});
+            res.send(respuesta);
+        } else {
+            res.redirect("/home");
+        }
     });
 
     app.post("/identificarse", function (req, res) {
