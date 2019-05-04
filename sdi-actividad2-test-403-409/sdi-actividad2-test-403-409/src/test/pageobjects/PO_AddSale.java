@@ -34,7 +34,7 @@ public class PO_AddSale extends PO_View {
 		priceForm.clear();
 		priceForm.sendKeys(String.format("%.2f", price));
 		// Pulsar el boton de crear.
-		By boton = By.className("btn");
+		By boton = By.name("enviar");
 		driver.findElement(boton).click();
 	}
 

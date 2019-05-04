@@ -32,8 +32,9 @@ import test.utils.SeleniumUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SdiActividad2403409ApplicationTests {
 	
-	// Path Miguel
 	static String PathFirefox64 = "../../FirefoxPortable/FirefoxPortable.exe";
+	
+	// Path Miguel
 	static String Geckdriver024 = "C:\\Users\\Miguel\\Desktop\\"
 			+ "PL-SDI-Sesion5-material\\geckodriver024win64.exe";
 
@@ -63,11 +64,9 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	// Antes de la primera prueba
-//	@BeforeClass
-//	static public void begin() throws ParseException {
-//		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
-//		javaMongodbInsertData.dataInsertion();
-//	}
+	@BeforeClass
+	static public void begin() {
+	}
 
 	// Al finalizar la última prueba
 	@AfterClass
@@ -101,23 +100,23 @@ public class SdiActividad2403409ApplicationTests {
 		// Vamos al formulario de registro
 		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
 		// Rellenamos el formulario.
-		PO_RegisterView.fillForm(driver, " ", "test_", "test_", "1234567890",
+		PO_RegisterView.fillForm(driver, "", "test_", "test_", "123456",
 				"123456");
 		// Comprobamos el error de email vacío.
 		PO_RegisterView.checkKey(driver, "El email no puede estar vacío");
 		// Rellenamos el formulario.
-		PO_RegisterView.fillForm(driver, "test@email.com", " ", "test_",
+		PO_RegisterView.fillForm(driver, "test@email.com", "", "test_",
 				"123456", "123456");
 		// Comprobamos el error de nombre vacío.
 		PO_RegisterView.checkKey(driver, "El nombre no puede estar vacío");
 		// Rellenamos el formulario.
-		PO_RegisterView.fillForm(driver, "test@email.com", "test_", " ",
+		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "",
 				"123456", "123456");
 		// Comprobamos el error de apellidos vacío.
 		PO_RegisterView.checkKey(driver, "El apellido no puede estar vacío");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_",
-				" ", " ");
+				"", "");
 		// Comprobamos el error de contraseña vacía.
 		PO_RegisterView.checkKey(driver, "La contraseña no puede estar vacía");
 	}
@@ -316,6 +315,7 @@ public class SdiActividad2403409ApplicationTests {
 		// Vamos a la pagina
 		PO_AddSale.goToPage(driver);
 		// Rellenar
+		SeleniumUtils.EsperaCargaPagina(driver, "id", "title", 2);
 		PO_AddSale.addSale(driver, "Test", "Oferta para testear", 100.0);
 		// Comprobar que ha sido añadida
 		PO_MySales.goToPage(driver);
@@ -336,10 +336,11 @@ public class SdiActividad2403409ApplicationTests {
 		// Vamos a la pagina
 		PO_AddSale.goToPage(driver);
 		// Rellenar
-		PO_AddSale.addSale(driver, " ", "Oferta", 80.0);
-		PO_AddSale.checkKey(driver, "Este campo no puede ser vacío");
-		PO_AddSale.addSale(driver, "Test", " ", 80.0);
-		PO_AddSale.checkKey(driver, "Este campo no puede ser vacío");
+		SeleniumUtils.EsperaCargaPagina(driver, "id", "title", 2);
+		PO_AddSale.addSale(driver, "", "Oferta", 80.0);
+		PO_AddSale.checkKey(driver, "El título no puede estar vacío");
+		PO_AddSale.addSale(driver, "Test", "", 80.0);
+		PO_AddSale.checkKey(driver, "La descripción no puede estar vacía");
 		PO_AddSale.addSale(driver, "Test", "Oferta", -200.0);
 		PO_AddSale.checkKey(driver, "El precio no puede ser negativo");
 	}
@@ -356,7 +357,7 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
-		
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		SeleniumUtils.textoPresentePagina(driver, "Coche");
 		SeleniumUtils.textoPresentePagina(driver, "Botella");
 		SeleniumUtils.textoPresentePagina(driver, "Casa");
@@ -379,7 +380,7 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
-
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		// Eliminamos la primera oferta
 		// Devuelve true en caso de que se haya eliminado dicha oferta
 		assertTrue(PO_MySales.deleteItem(driver, 0));
@@ -398,11 +399,12 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 
 		// Cogemos el indice del ultimo objeto eliminable
 		int lastIndex = PO_MySales.checkNumberOfDeleteableItems(driver) - 1;
 
-		SeleniumUtils.esperarSegundos(driver, 2);
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		// Eliminamos Ultima oferta y comprobamos que los elementos se
 		// redujeron.
 		assertTrue(PO_MySales.deleteItem(driver, lastIndex));
@@ -426,11 +428,11 @@ public class SdiActividad2403409ApplicationTests {
 		List<WebElement> sale = PO_SearchView.checkElement(driver, "class",
 				"table-light");
 		assertTrue(sale.size() == 5);
+		SeleniumUtils.textoPresentePagina(driver, "Coche");
 		SeleniumUtils.textoPresentePagina(driver, "Consola");
 		SeleniumUtils.textoPresentePagina(driver, "Raton");
 		SeleniumUtils.textoPresentePagina(driver, "Joya");
-		SeleniumUtils.textoPresentePagina(driver, "Gafas");
-		SeleniumUtils.textoPresentePagina(driver, "Caña de Pescar");
+		SeleniumUtils.textoPresentePagina(driver, "Botella");
 	}
 
 	/**
@@ -530,8 +532,8 @@ public class SdiActividad2403409ApplicationTests {
 		PO_SearchView.searchForSale(driver, "Consola");
 		// Comprar la oferta
 		PO_SearchView.buySale(driver, "Consola");
-		// Comprobar balance
-		PO_HomeView.checkKey(driver, "No dispone de suficiente dinero para comprar la oferta");
+		// Comprobar mensaje
+		PO_SearchView.checkKey(driver, "¡Atención! Ha ocurrido un error procesando la oferta");
 	}
 
 	/**
@@ -543,6 +545,6 @@ public class SdiActividad2403409ApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "miguel@email.com", "password");
 		PO_BoughtView.goToPage(driver);
-		assertEquals(2, PO_BoughtView.checkNumberOfItems(driver));
+		assertEquals(1, PO_BoughtView.checkNumberOfItems(driver));
 	}
 }
