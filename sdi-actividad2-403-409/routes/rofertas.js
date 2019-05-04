@@ -9,6 +9,22 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.post("/sales/add", function (req, res) {
+        if (req.body.title === "" || req.body.title === null) {
+            res.redirect("/sales/add?mensaje=El título no puede estar vacío");
+            return;
+        }
+        if (req.body.details === "" || req.body.details === null) {
+            res.redirect("/sales/add?mensaje=La descripción no puede estar vacía");
+            return;
+        }
+        if (req.body.price === "" || req.body.price === null) {
+            res.redirect("/sales/add?mensaje=El precio no puede estar vacío");
+            return;
+        }
+        if (req.body.price < 0) {
+            res.redirect("/sales/add?mensaje=El precio no puede ser negativo");
+            return;
+        }
         if (req.session.usuario !== undefined) {
             var sale = {
                 title: req.body.title,
