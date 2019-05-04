@@ -20,6 +20,7 @@ public class PO_SearchView extends PO_View {
 	}
 
 	public static void searchForSale(WebDriver driver, String title) {
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "form-control", getTimeout());
 		WebElement inputSearch = driver.findElement(By.name("searchText"));
 		inputSearch.click();
 		inputSearch.sendKeys(title);
@@ -32,7 +33,7 @@ public class PO_SearchView extends PO_View {
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver,
 				"free",
 				String.format(
-						"//td[contains(text(), '%s')]/following-sibling::*[4]",
+						"/html/body/div/section[2]/table/tbody/tr/td[5]/a",
 						title),
 				getTimeout());
 		elementos.get(0).click();

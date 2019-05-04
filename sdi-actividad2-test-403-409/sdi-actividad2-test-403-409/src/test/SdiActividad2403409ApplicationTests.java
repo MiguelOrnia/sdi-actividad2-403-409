@@ -63,11 +63,9 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	// Antes de la primera prueba
-//	@BeforeClass
-//	static public void begin() throws ParseException {
-//		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
-//		javaMongodbInsertData.dataInsertion();
-//	}
+	@BeforeClass
+	static public void begin() {
+	}
 
 	// Al finalizar la última prueba
 	@AfterClass
@@ -316,6 +314,7 @@ public class SdiActividad2403409ApplicationTests {
 		// Vamos a la pagina
 		PO_AddSale.goToPage(driver);
 		// Rellenar
+		SeleniumUtils.EsperaCargaPagina(driver, "id", "title", 2);
 		PO_AddSale.addSale(driver, "Test", "Oferta para testear", 100.0);
 		// Comprobar que ha sido añadida
 		PO_MySales.goToPage(driver);
@@ -336,6 +335,7 @@ public class SdiActividad2403409ApplicationTests {
 		// Vamos a la pagina
 		PO_AddSale.goToPage(driver);
 		// Rellenar
+		SeleniumUtils.EsperaCargaPagina(driver, "id", "title", 2);
 		PO_AddSale.addSale(driver, " ", "Oferta", 80.0);
 		PO_AddSale.checkKey(driver, "Este campo no puede ser vacío");
 		PO_AddSale.addSale(driver, "Test", " ", 80.0);
@@ -356,7 +356,7 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
-		
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		SeleniumUtils.textoPresentePagina(driver, "Coche");
 		SeleniumUtils.textoPresentePagina(driver, "Botella");
 		SeleniumUtils.textoPresentePagina(driver, "Casa");
@@ -379,7 +379,7 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
-
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		// Eliminamos la primera oferta
 		// Devuelve true en caso de que se haya eliminado dicha oferta
 		assertTrue(PO_MySales.deleteItem(driver, 0));
@@ -398,11 +398,12 @@ public class SdiActividad2403409ApplicationTests {
 
 		// Nos dirigimos a la lista de nuestras Ofertas
 		PO_MySales.goToPage(driver);
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 
 		// Cogemos el indice del ultimo objeto eliminable
 		int lastIndex = PO_MySales.checkNumberOfDeleteableItems(driver) - 1;
 
-		SeleniumUtils.esperarSegundos(driver, 2);
+		SeleniumUtils.EsperaCargaPagina(driver, "class", "deleteSale", 2);
 		// Eliminamos Ultima oferta y comprobamos que los elementos se
 		// redujeron.
 		assertTrue(PO_MySales.deleteItem(driver, lastIndex));
@@ -530,8 +531,8 @@ public class SdiActividad2403409ApplicationTests {
 		PO_SearchView.searchForSale(driver, "Consola");
 		// Comprar la oferta
 		PO_SearchView.buySale(driver, "Consola");
-		// Comprobar balance
-		PO_HomeView.checkKey(driver, "No dispone de suficiente dinero para comprar la oferta");
+		// Comprobar mensaje
+		PO_SearchView.checkKey(driver, "¡Atención! Ha ocurrido un error procesando la oferta");
 	}
 
 	/**
