@@ -238,6 +238,7 @@ public class JavaMongoDbInsertData {
 	public void removeDataTest() {
 		getMongodb().getCollection("sales").drop();
 		getMongodb().getCollection("usuarios").drop();
+		getMongodb().getCollection("conversations").drop();
 	}
 
 	public MongoClient getMongoClient() {

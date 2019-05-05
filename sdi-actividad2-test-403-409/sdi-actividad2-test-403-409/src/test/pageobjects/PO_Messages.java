@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 public class PO_Messages extends PO_View {
 
 	public static void goToPage(WebDriver driver) {
-		List<WebElement> elementos = PO_View.checkElement(driver, "free",
-				"//a[contains(@href, '/messages')]");
+		List<WebElement> elementos = PO_View.checkElement(driver, "class",
+				"messageButton");
 		elementos.get(0).click();
 	}
 

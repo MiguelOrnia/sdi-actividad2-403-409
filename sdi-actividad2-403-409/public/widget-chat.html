@@ -19,7 +19,6 @@
 </div>
 
 <script>
-    var mensajes;
 
     function cargarMensajes() {
         var url = new URL(window.location.href);
@@ -60,7 +59,13 @@
             dataType: 'json',
             headers: {token: token},
             success: function (respuesta) {
-                actualizarMensajes();
+                $(".currentChatContent").append(
+                    "<div class='message sent'>" +
+                    "<div class='messageContent'>" + respuesta.message.message +
+                    "</div>" +
+                    "<div class='messageTime'>" + respuesta.message.date.toString() + "</div>" +
+                    "</div>"
+                );
             },
             error: function (error) {
                 $("#contenedor-principal").load("widget-login.html");
@@ -84,5 +89,7 @@
     }
 
     cargarMensajes();
+
+    window.setInterval(cargarMensajes, 3000);
 
 </script>

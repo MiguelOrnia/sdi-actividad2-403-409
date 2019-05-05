@@ -22,6 +22,7 @@ import test.pageobjects.PO_BoughtView;
 import test.pageobjects.PO_Client_LoginView;
 import test.pageobjects.PO_HomeView;
 import test.pageobjects.PO_LoginView;
+import test.pageobjects.PO_Messages;
 import test.pageobjects.PO_MySales;
 import test.pageobjects.PO_NavView;
 import test.pageobjects.PO_RegisterView;
@@ -552,44 +553,126 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	/**
-	 * PR26. Inicio de sesión con datos válidos.
+	 * PR29. Inicio de sesión con datos válidos.
 	 */
 	@Test
-	public void PR26() {
+	public void PR29() {
 		driver.navigate().to(URL + "/mensajes.html");
 		// Rellenamos el formulario
 		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
 		// Comprobamos que hemos accedido con exito a la lista de ofertas
 		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
 	}
-	
+
 	/**
-	 * PR27.  Inicio de sesión con datos inválidos (email existente, pero contraseña incorrecta).
+	 * PR30. Inicio de sesión con datos inválidos (email existente, pero
+	 * contraseña incorrecta).
 	 */
 	@Test
-	public void PR27() {
+	public void PR30() {
 		driver.navigate().to(URL + "/mensajes.html");
 		// Rellenamos el formulario
 		PO_Client_LoginView.fillForm(driver, "paco@email.com", "nopassword");
 		// Comprobamos que seguimos en la página de login
 		PO_Client_LoginView.checkElement(driver, "id", "loginTitle");
 		// Comprobamos que se ha mostrado el mensaje de error
-		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");			
+		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");
 	}
-	
+
 	/**
-	 * PR27.  Inicio de sesión con datos inválidos (email existente, pero contraseña incorrecta).
+	 * PR31. Inicio de sesión con datos inválidos (email existente, pero
+	 * contraseña incorrecta).
 	 */
 	@Test
-	public void PR28() {
+	public void PR31() {
 		driver.navigate().to(URL + "/mensajes.html");
 		// Rellenamos el formulario con la contraseña vacia
 		PO_Client_LoginView.fillForm(driver, "paco@email.com", "");
 		// Comprobamos que seguimos en la página de login
 		PO_Client_LoginView.checkElement(driver, "id", "loginTitle");
 		// Comprobamos que se ha mostrado el mensaje de error
-		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");			
+		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");
 	}
-	
+
+	/**
+	 * PR32.Mostrar el listado de ofertas disponibles y comprobar que se
+	 * muestran todas las que existen, menos las del usuario identificado.
+	 */
+	@Test
+	public void PR32() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
+		// Comprobamos que hemos accedido con exito a la lista de ofertas
+		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
+		List<WebElement> elementos = PO_UserList.checkElement(driver, "class",
+				"saleRow");
+		// Comprobamos que están todas las ofertas
+		assertEquals(26, elementos.size());
+	}
+
+	/**
+	 * PR33.Sobre una búsqueda determinada de ofertas (a elección de
+	 * desarrollador), enviar un mensaje a una oferta concreta. Se abriría dicha
+	 * conversación por primera vez. Comprobar que el mensaje aparece en el
+	 * listado de mensajes.
+	 */
+	@Test
+	public void PR33() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
+		// Comprobamos que hemos accedido con exito a la lista de ofertas
+		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
+		PO_Messages.goToPage(driver);
+		// Necesita hacer las comprobaciones y devolver la conversacion
+		// correspondiente
+		SeleniumUtils.esperarSegundos(driver, 3);
+		PO_Messages.sendMessage(driver, "Buenas");
+		SeleniumUtils.esperarSegundos(driver, 2);
+		List<WebElement> elementos = PO_UserList.checkElement(driver, "class",
+				"sent");
+		// Comprobamos que está el mensaje enviado
+		assertEquals(1, elementos.size());
+	}
+
+	/**
+	 * PR34.Sobre el listado de conversaciones enviar un mensaje a una
+	 * conversación ya abierta. Comprobar que el mensaje aparece en el listado
+	 * de mensajes.
+	 */
+	@Test
+	public void PR34() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
+		// Comprobamos que hemos accedido con exito a la lista de ofertas
+		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
+		PO_Messages.goToPage(driver);
+		// Necesita hacer las comprobaciones y devolver la conversacion
+		// correspondiente
+		SeleniumUtils.esperarSegundos(driver, 3);
+		//Enviamos el primer mensaje
+		PO_Messages.sendMessage(driver, "Buenas");
+		SeleniumUtils.esperarSegundos(driver, 2);
+		List<WebElement> elementos = PO_UserList.checkElement(driver, "class",
+				"sent");
+		// Comprobamos que está el mensaje enviado
+		assertEquals(1, elementos.size());
+		
+		//Vamos a simular que el usuario vuelve a iniciar sesion y envia otro mensaje a la misma oferta 
+		driver.navigate().to(URL + "/mensajes.html");
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
+		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
+		PO_Messages.goToPage(driver);
+		SeleniumUtils.esperarSegundos(driver, 3);
+		//Enviamos el segundo mensaje
+		PO_Messages.sendMessage(driver, "Queria saber el precio del coche");
+		SeleniumUtils.esperarSegundos(driver, 2);
+		elementos = PO_UserList.checkElement(driver, "class",
+				"sent");
+		// Comprobamos que está el mensaje enviado
+		assertEquals(2, elementos.size());
+	}
 
 }

@@ -167,8 +167,10 @@ module.exports = function (app, gestorBD) {
                                     err: "Sin resultados"
                                 });
                             }else{
-                                //SUCCESS
-                                let hola = 1;
+                                res.status(200);
+                                res.json({
+                                    message: message
+                                })
                             }
                         })
                     }

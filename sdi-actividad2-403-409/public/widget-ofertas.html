@@ -44,11 +44,11 @@
         $("#tablaCuerpo").empty(); // Vaciar la tabla
         for (i = 0; i < ofertasMostrar.length; i++) {
             $("#tablaCuerpo").append(
-                "<tr id=" + ofertasMostrar[i]._id + ">" +
+                "<tr id=" + ofertasMostrar[i]._id + " class='saleRow'>" +
                 "<td>" + ofertasMostrar[i].title + "</td>" +
                 "<td>" + ofertasMostrar[i].description + "</td>" +
                 "<td>" + ofertasMostrar[i].price + "</td>" +
-                "<td><a class='btn btn-info' onclick=widgetMensajes('" + ofertasMostrar[i]._id + "')>Mensaje</a></td>" +
+                "<td><a class='btn btn-info messageButton' onclick=widgetMensajes('" + ofertasMostrar[i]._id + "')>Mensaje</a></td>" +
                 "</tr>");
         }
     }
