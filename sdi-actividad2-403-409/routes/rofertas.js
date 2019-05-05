@@ -133,7 +133,8 @@ module.exports = function (app, swig, gestorBD) {
                             actual: pg,
                             user: req.session.usuario,
                             success: success,
-                            error: error
+                            error: error,
+                            searchText: req.query.searchText
                         });
                     res.send(respuesta);
                 }

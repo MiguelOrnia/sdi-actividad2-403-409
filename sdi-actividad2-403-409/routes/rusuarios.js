@@ -194,7 +194,6 @@ module.exports = function (app, swig, gestorBD) {
     app.post("/user/delete", function (req, res) {
         var criterio;
         var criterioOfertas;
-        let user = null;
 
         if (typeof (req.body.email) === "object") {
             criterio = {email: {$in: req.body.email}};
