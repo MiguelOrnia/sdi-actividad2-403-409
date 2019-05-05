@@ -56,8 +56,7 @@ module.exports = function (app, swig, gestorBD) {
                         name: req.body.name,
                         surname: req.body.surname,
                         money: 100,
-                        rol: "rol_estandar",
-                        active: true
+                        rol: "rol_estandar"
                     }
                     gestorBD.insertarUsuario(usuario, function (id) {
                         if (id == null) {
@@ -92,7 +91,6 @@ module.exports = function (app, swig, gestorBD) {
             .update(req.body.password).digest('hex');
         var criterio = {
             email: req.body.username,
-            active : true,
             password: seguro
         }
         gestorBD.obtenerUsuarios(criterio, function (usuarios) {
@@ -195,6 +193,9 @@ module.exports = function (app, swig, gestorBD) {
 
     app.post("/user/delete", function (req, res) {
         var criterio;
+        var criterioOfertas;
+        let user = null;
+
         if (typeof (req.body.email) === "object") {
             criterio = {email: {$in: req.body.email}};
         }
@@ -202,17 +203,35 @@ module.exports = function (app, swig, gestorBD) {
         if (typeof (req.body.email) === "string") {
             criterio = {email: req.body.email};
         }
-        var criterioEliminar = {active: false};
+
+        gestorBD.obtenerUsuarios(criterio, function (users) {
+            if (users == null) {
+                res.redirect("/user/list" +
+                    "?mensaje=Los usuarios no pudieron ser eliminados");
+                app.get("logger").error('Error al borrar el usuario');
+            } else {
+                criterioOfertas = { seller : {$in: users} };
+            }
+        });
+
         if (criterio !== undefined) {
-            gestorBD.eliminarUsuarios(criterio, criterioEliminar, function (usuarios) {
+            gestorBD.eliminarUsuarios(criterio, function (usuarios) {
                 if (usuarios === null || usuarios.length === 0) {
                     app.get("logger").error('Error al borrar el usuario');
                     res.redirect("/user/list" +
                         "?mensaje=Los usuarios no pudieron ser eliminados");
                 } else {
-                    app.get("logger").info('Usuarios borrados correctamente');
-                    res.redirect("/user/list" +
-                        "?mensaje=Los usuarios se eliminaron correctamente");
+                    gestorBD.eliminarOfertas(criterioOfertas, function (sales) {
+                        if (sales === null || sales.length === 0) {
+                            app.get("logger").error('Error al borrar las ofertas del usuario');
+                            res.redirect("/user/list" +
+                                "?mensaje=Las ofertas no pudieron ser eliminadas");
+                        } else {
+                            app.get("logger").info('Usuarios borrados correctamente');
+                            res.redirect("/user/list" +
+                                "?mensaje=Los usuarios se eliminaron correctamente");
+                        }
+                    });
                 }
             });
         } else {

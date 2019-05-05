@@ -35,8 +35,7 @@ module.exports = function (app, swig, gestorBD) {
                 details: req.body.details,
                 price: req.body.price,
                 seller: req.session.usuario,
-                buyer: null,
-                fav: req.body.fav,
+                buyer: null
             }
             // Conectarse
             gestorBD.addSale(sale, function (id) {
@@ -57,7 +56,7 @@ module.exports = function (app, swig, gestorBD) {
         if(req.session.usuario.rol === "rol_estandar") {
             var criterio = {seller: req.session.usuario};
             gestorBD.obtenerOfertas(criterio, function (sales) {
-                if (sales == null) {
+                if (sales === null) {
                     res.send("Error al listar ");
                 } else {
                     var respuesta = swig.renderFile('views/sales/list.html',
@@ -77,7 +76,7 @@ module.exports = function (app, swig, gestorBD) {
         if(req.session.usuario.rol === "rol_estandar") {
             var criterio = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
             gestorBD.eliminarOferta(criterio, function (ofertas) {
-                if (ofertas == null) {
+                if (ofertas === null) {
                     res.send("No se puede eliminar la oferta");
                 } else {
                     res.redirect("/sales/list");
