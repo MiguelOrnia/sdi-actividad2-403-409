@@ -21,7 +21,7 @@
             </thead>
             {% for user in usersList%}
             <tbody>
-                {% if user.active && user.rol !== "rol_admin"%}
+                {% if user.rol !== "rol_admin"%}
                 <td>{{user.email}}</td>
                 <td>{{user.name}}</td>
                 <td>{{user.surname}}</td>

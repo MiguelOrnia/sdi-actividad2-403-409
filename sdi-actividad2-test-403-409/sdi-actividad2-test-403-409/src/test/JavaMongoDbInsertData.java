@@ -44,7 +44,6 @@ public class JavaMongoDbInsertData {
 					.append("surname", "Ornia Gomez")
 					.append("email", "miguel@email.com")
 					.append("password", "742d7b38a9ffd280abe7d115d76268478d2b8c736ff72945c8b4e0bc982a46ba")
-					.append("active",true)
 					.append("money", 100)
 					.append("rol", "rol_estandar");
 			Document user2 = new Document()
@@ -52,7 +51,6 @@ public class JavaMongoDbInsertData {
 					.append("surname", "Perez Fernandez")
 					.append("email", "alfredo@email.com")
 					.append("password", "742d7b38a9ffd280abe7d115d76268478d2b8c736ff72945c8b4e0bc982a46ba")
-					.append("active",true)
 					.append("money", 100)
 					.append("rol", "rol_estandar");
 			Document user3 = new Document().append("_id", 3)
@@ -60,7 +58,6 @@ public class JavaMongoDbInsertData {
 					.append("surname", "Salvador Vega")
 					.append("email", "paco@email.com")
 					.append("password", "742d7b38a9ffd280abe7d115d76268478d2b8c736ff72945c8b4e0bc982a46ba")
-					.append("active",true)
 					.append("money", 100)
 					.append("rol", "rol_estandar");
 			Document user4 = new Document().append("_id", 4)
@@ -68,7 +65,6 @@ public class JavaMongoDbInsertData {
 					.append("surname", "Perez Hernandez")
 					.append("email", "maria@hotmail.es")
 					.append("password", "742d7b38a9ffd280abe7d115d76268478d2b8c736ff72945c8b4e0bc982a46ba")
-					.append("active",true)
 					.append("money", 100)
 					.append("rol", "rol_estandar");
 			Document user5 = new Document().append("_id", 5)
@@ -76,14 +72,12 @@ public class JavaMongoDbInsertData {
 					.append("surname", "Sanchez Vega")
 					.append("email", "alvaro@email.com")
 					.append("password", "742d7b38a9ffd280abe7d115d76268478d2b8c736ff72945c8b4e0bc982a46ba")
-					.append("active",true)
 					.append("money", 100)
 					.append("rol", "rol_estandar");
 			Document admin = new Document().append("name", "admin")
 					.append("surname", "")
 					.append("email", "admin@email.com")
 					.append("password", "ebd5359e500475700c6cc3dd4af89cfd0569aa31724a1bf10ed1e3019dcfdb11")
-					.append("active",true)
 					.append("rol", "rol_admin");
 			
 			col.insertOne(user1);

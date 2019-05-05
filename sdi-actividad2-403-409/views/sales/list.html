@@ -20,11 +20,6 @@
                 <td>{{sale.details}}</td>
                 <td>{{sale.price}}€</td>
                 <td><a class="deleteSale" href="/sales/delete/{{sale._id.toString()}}">Eliminar</a></td>
-                {% if sale.fav !== 'true'%}
-                <td><a href="{{'/sale/fav/' + sale._id.toString()}}" class="destacar">Destacar</a></td>
-                {% else %}
-                <td>Oferta destacada</td>
-                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

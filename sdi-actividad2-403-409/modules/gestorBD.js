@@ -40,15 +40,13 @@ module.exports = {
             }
         });
     },
-    eliminarUsuarios: function (criterio, nuevoCriterio, callbackFunction) {
+    eliminarUsuarios: function (criterio, callbackFunction) {
         this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
             if (err) {
                 callbackFunction(null);
             } else {
                 var collection = db.collection('usuarios');
-                collection.updateMany(criterio, {
-                    $set: nuevoCriterio
-                }, function (err, result) {
+                collection.deleteMany(criterio, function (err, result) {
                     if (err) {
                         callbackFunction(null);
                     } else {
@@ -105,6 +103,23 @@ module.exports = {
                         funcionCallback(null);
                     } else {
                         funcionCallback(result);
+                    }
+                    db.close();
+                });
+            }
+        });
+    },
+    eliminarOfertas: function (criterio, callbackFunction) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                callbackFunction(null);
+            } else {
+                var collection = db.collection('sales');
+                collection.deleteMany(criterio, function (err, result) {
+                    if (err) {
+                        callbackFunction(null);
+                    } else {
+                        callbackFunction(result);
                     }
                     db.close();
                 });
