@@ -19,6 +19,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import test.pageobjects.PO_AddSale;
 import test.pageobjects.PO_BoughtView;
+import test.pageobjects.PO_Client_LoginView;
 import test.pageobjects.PO_HomeView;
 import test.pageobjects.PO_LoginView;
 import test.pageobjects.PO_MySales;
@@ -31,12 +32,11 @@ import test.utils.SeleniumUtils;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SdiActividad2403409ApplicationTests {
-	
+
 	static String PathFirefox64 = "../../FirefoxPortable/FirefoxPortable.exe";
-	
+
 	// Path Miguel
-	static String Geckdriver024 = "C:\\Users\\Miguel\\Desktop\\"
-			+ "PL-SDI-Sesion5-material\\geckodriver024win64.exe";
+	static String Geckdriver024 = "C:\\Users\\Emilio\\Documents\\SDI\\PL-SDI-Sesión5-material\\PL-SDI-Sesión5-material\\geckodriver024win64.exe";
 
 	static WebDriver driver = getDriver(PathFirefox64, Geckdriver024);
 	static String URL = "http://localhost:8081";
@@ -47,15 +47,14 @@ public class SdiActividad2403409ApplicationTests {
 		WebDriver driver = new FirefoxDriver();
 		return driver;
 	}
-	
+
 	// Antes de cada prueba se navega al URL home de la aplicación
 	@Before
-	public void setUp() throws ParseException{
+	public void setUp() throws ParseException {
 		JavaMongoDbInsertData javaMongodbInsertData = new JavaMongoDbInsertData();
 		javaMongodbInsertData.dataInsertion();
 		driver.navigate().to(URL);
 	}
-
 
 	// Después de cada prueba se borran las cookies del navegador
 	@After
@@ -82,7 +81,8 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR01() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class",
+				"underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_",
 				"123456", "123456");
@@ -98,7 +98,8 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR02() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class",
+				"underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "", "test_", "test_", "123456",
 				"123456");
@@ -115,8 +116,8 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprobamos el error de apellidos vacío.
 		PO_RegisterView.checkKey(driver, "El apellido no puede estar vacío");
 		// Rellenamos el formulario.
-		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_",
-				"", "");
+		PO_RegisterView.fillForm(driver, "test@email.com", "test_", "test_", "",
+				"");
 		// Comprobamos el error de contraseña vacía.
 		PO_RegisterView.checkKey(driver, "La contraseña no puede estar vacía");
 	}
@@ -129,14 +130,15 @@ public class SdiActividad2403409ApplicationTests {
 	@Test
 	public void PR03() {
 		// Vamos al formulario de registro
-		PO_HomeView.clickOption(driver, "registrarse", "class", "underlineHover");
+		PO_HomeView.clickOption(driver, "registrarse", "class",
+				"underlineHover");
 		// Rellenamos el formulario.
 		PO_RegisterView.fillForm(driver, "test@email.com", "test", "test",
 				"1234567890", "1234578901");
 		// Comprobamos que el error existe
 		PO_RegisterView.checkKey(driver, "Las contraseñas no coinciden");
 	}
-	
+
 	/**
 	 * PR04. Inicio de sesión con datos válidos.
 	 */
@@ -150,8 +152,8 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	/**
-	 * PR05. Inicio de sesión con datos válidos (email
-	 * existente, pero contraseña incorrecta).
+	 * PR05. Inicio de sesión con datos válidos (email existente, pero
+	 * contraseña incorrecta).
 	 */
 
 	@Test
@@ -161,10 +163,10 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprobamos que el error existe
 		PO_LoginView.checkKey(driver, "Email o password incorrecto");
 	}
-	
+
 	/**
-	 * PR06. Inicio de sesión con datos inválidos (campo email
-	 * y contraseña vacíos).
+	 * PR06. Inicio de sesión con datos inválidos (campo email y contraseña
+	 * vacíos).
 	 */
 
 	@Test
@@ -174,10 +176,10 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprobamos que el error existe
 		PO_LoginView.checkKey(driver, "Email o password incorrecto");
 	}
-	
+
 	/**
-	 * PR07. Inicio de sesión con datos inválidos (email no
-	 * existente en la aplicación).
+	 * PR07. Inicio de sesión con datos inválidos (email no existente en la
+	 * aplicación).
 	 */
 
 	@Test
@@ -187,7 +189,6 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprobamos que el error existe
 		PO_LoginView.checkKey(driver, "Email o password incorrecto");
 	}
-
 
 	/**
 	 * PR08. Hacer click en la opción de salir de sesión y comprobar que se
@@ -457,10 +458,10 @@ public class SdiActividad2403409ApplicationTests {
 	}
 
 	/**
-	 * PR21. Hacer  una  búsqueda  escribiendo  en  el  campo  un  texto en minúscula o mayúscula
-	 * y comprobar que se muestra la página que corresponde, con la lista de ofertas que 
-	 * contengan dicho texto, independientemente que el título esté almacenado en minúsculas 
-	 * o mayúscula.
+	 * PR21. Hacer una búsqueda escribiendo en el campo un texto en minúscula o
+	 * mayúscula y comprobar que se muestra la página que corresponde, con la
+	 * lista de ofertas que contengan dicho texto, independientemente que el
+	 * título esté almacenado en minúsculas o mayúscula.
 	 */
 
 	@Test
@@ -473,7 +474,7 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprobar que está
 		SeleniumUtils.textoPresentePagina(driver, "Raton");
 	}
-	
+
 	/**
 	 * PR22. Sobre una búsqueda determinada, comprar una oferta que deja un
 	 * saldo positivo en el contador del comprobador. Y comprobar que el
@@ -534,7 +535,7 @@ public class SdiActividad2403409ApplicationTests {
 		// Comprar la oferta
 		PO_SearchView.buySale(driver, "Consola");
 		// Comprobar mensaje
-		assertEquals(PO_SearchView.getMessageError(driver), 
+		assertEquals(PO_SearchView.getMessageError(driver),
 				"¡Atención! Ha ocurrido un error procesando la oferta");
 	}
 
@@ -549,4 +550,46 @@ public class SdiActividad2403409ApplicationTests {
 		PO_BoughtView.goToPage(driver);
 		assertEquals(1, PO_BoughtView.checkNumberOfItems(driver));
 	}
+
+	/**
+	 * PR26. Inicio de sesión con datos válidos.
+	 */
+	@Test
+	public void PR26() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "password");
+		// Comprobamos que hemos accedido con exito a la lista de ofertas
+		PO_Client_LoginView.checkElement(driver, "id", "salesListTitle");
+	}
+	
+	/**
+	 * PR27.  Inicio de sesión con datos inválidos (email existente, pero contraseña incorrecta).
+	 */
+	@Test
+	public void PR27() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "nopassword");
+		// Comprobamos que seguimos en la página de login
+		PO_Client_LoginView.checkElement(driver, "id", "loginTitle");
+		// Comprobamos que se ha mostrado el mensaje de error
+		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");			
+	}
+	
+	/**
+	 * PR27.  Inicio de sesión con datos inválidos (email existente, pero contraseña incorrecta).
+	 */
+	@Test
+	public void PR28() {
+		driver.navigate().to(URL + "/mensajes.html");
+		// Rellenamos el formulario con la contraseña vacia
+		PO_Client_LoginView.fillForm(driver, "paco@email.com", "");
+		// Comprobamos que seguimos en la página de login
+		PO_Client_LoginView.checkElement(driver, "id", "loginTitle");
+		// Comprobamos que se ha mostrado el mensaje de error
+		PO_Client_LoginView.checkKey(driver, "Usuario no encontrado");			
+	}
+	
+
 }

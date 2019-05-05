@@ -24,7 +24,6 @@
     function cargarMensajes() {
         var url = new URL(window.location.href);
         var saleID = url.searchParams.get("w");
-        console.log("cargando mensajes para " + saleID);
         var urlAjax = URLbase + "/sales/conversation/" + saleID;
         $.ajax({
             url: urlAjax,
@@ -40,7 +39,6 @@
             },
             error: function (error) {
                 if (error.status == 500) {
-                    console.log(error);
                     $("#contenedor-principal").load("widget-login.html");
                 }
             }
@@ -52,7 +50,6 @@
         var urlAjax = URLbase + "/sales/message/";
         var url = new URL(window.location.href);
         var convID = url.searchParams.get("w");
-        console.log("vamos a enviar: "+mensaje);
         $.ajax({
             url: urlAjax,
             type: "POST",
@@ -66,7 +63,7 @@
                 actualizarMensajes();
             },
             error: function (error) {
-                console.log(error);
+                $("#contenedor-principal").load("widget-login.html");
             }
         });
     }
@@ -75,7 +72,6 @@
         var mensajes = conversation.messages;
         $("#currentChatContent").empty(); // Vaciar la tabla
         for (i = 0; i < mensajes.length; i++) {
-            console.log(mensajes[i]);
             $(".currentChatContent").append(
                 "<div class='message sent'>" +
                 "<div class='messageContent'>" + mensajes[i].message +
