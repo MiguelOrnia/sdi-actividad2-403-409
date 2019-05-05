@@ -300,5 +300,22 @@ module.exports = {
                 });
             }
         });
+    },
+    eliminarConversaciones: function (criterio, callbackFunction) {
+        this.mongo.MongoClient.connect(this.app.get('db'), function (err, db) {
+            if (err) {
+                callbackFunction(null);
+            } else {
+                var collection = db.collection('conversations');
+                collection.deleteMany(criterio, function (err, result) {
+                    if (err) {
+                        callbackFunction(null);
+                    } else {
+                        callbackFunction(result);
+                    }
+                    db.close();
+                });
+            }
+        });
     }
 };

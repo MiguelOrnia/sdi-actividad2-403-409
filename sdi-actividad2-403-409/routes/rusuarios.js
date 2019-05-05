@@ -192,9 +192,7 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.post("/user/delete", function (req, res) {
-        var criterio;
-        var criterioOfertas;
-        let user = null;
+        var criterio, criterioOfertas, criterioConversaciones;
 
         if (typeof (req.body.email) === "object") {
             criterio = {email: {$in: req.body.email}};
@@ -211,6 +209,7 @@ module.exports = function (app, swig, gestorBD) {
                 app.get("logger").error('Error al borrar el usuario');
             } else {
                 criterioOfertas = { seller : {$in: users} };
+                criterioConversaciones = { user : {$in: users} };
             }
         });
 
@@ -227,9 +226,16 @@ module.exports = function (app, swig, gestorBD) {
                             res.redirect("/user/list" +
                                 "?mensaje=Las ofertas no pudieron ser eliminadas");
                         } else {
-                            app.get("logger").info('Usuarios borrados correctamente');
-                            res.redirect("/user/list" +
-                                "?mensaje=Los usuarios se eliminaron correctamente");
+                            gestorBD.eliminarConversaciones(criterioConversaciones, function (conversaciones) {
+                                if (conversaciones === null || conversaciones.length === 0) {
+                                    app.get("logger").error('Error al borrar las conversaciones del usuario');
+                                    res.redirect("/user/list" +
+                                        "?mensaje=Las ofertas no pudieron ser eliminadas");
+                                } else {
+                                    app.get("logger").info('Usuarios borrados correctamente');
+                                    res.redirect("/user/list" +
+                                        "?mensaje=Los usuarios se eliminaron correctamente");
+                                }
                         }
                     });
                 }
