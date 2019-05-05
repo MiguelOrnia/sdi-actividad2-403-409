@@ -30,11 +30,17 @@ module.exports = function (app, swig, gestorBD) {
             return;
         }
         if (req.session.usuario !== undefined) {
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+            let dateString = mm + '/' + dd + '/' + yyyy;
             var sale = {
                 title: req.body.title,
                 details: req.body.details,
                 price: req.body.price,
                 seller: req.session.usuario,
+                date: dateString,
                 buyer: null
             }
             // Conectarse
