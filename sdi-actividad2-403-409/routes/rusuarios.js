@@ -236,8 +236,9 @@ module.exports = function (app, swig, gestorBD) {
                                     res.redirect("/user/list" +
                                         "?mensaje=Los usuarios se eliminaron correctamente");
                                 }
-                        }
-                    });
+                        });
+                    }
+                });
                 }
             });
         } else {
